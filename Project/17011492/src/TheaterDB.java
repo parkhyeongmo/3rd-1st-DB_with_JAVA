@@ -106,7 +106,7 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // 회원
 		}
 		
 		else if(e.getSource() == btn_inquiry) {
-			myReservation myreserve = new myReservation(con, memberId, today);
+			myReservation myreserve = new myReservation(con, memberId, today); // 나의 예매 내역 폼 호출
 		}
 		
 	}
@@ -319,7 +319,7 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // 예매
 		
 		try {
 			Statement stmt = con.createStatement();
-			query = "Select scheduleId, hallId, openingDate, dayofweek, StartTime from schedules where MovieId = " + movieId;
+			query = "Select scheduleId, hallId, openingDate, dayofweek, StartTime from schedules where MovieId = " + movieId + ";";
 			
 			ResultSet rs = stmt.executeQuery(query);
 			
@@ -405,7 +405,7 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // 예매
 	
 }
 
-class myReservation extends JFrame implements ActionListener, MouseListener{
+class myReservation extends JFrame implements ActionListener, MouseListener{ // 나의 예매 내역 폼
 	
 	Connection con;
 	ResultSet rs;
@@ -435,7 +435,7 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 	
 	JTable myReserveTable = new JTable(model);	
 	
-	public myReservation(Connection con, int memberId, String today) {
+	public myReservation(Connection con, int memberId, String today) { // 나의 예매 내역 폼 생성자
 		
 		this.con = con;
 		this.memberId = memberId;
@@ -482,7 +482,7 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 		int row = myReserveTable.getSelectedRow();
 		ticketId = (int)myReserveTable.getModel().getValueAt(row, 0);	
 		title = myReserveTable.getModel().getValueAt(row, 1).toString();	
-		ShowInformation show = new ShowInformation(con, ticketId);		
+		ShowInformation show = new ShowInformation(con, ticketId);	 // 클릭한 예매 내역에 대한 상세 정보 출력 폼 호출	
 		
 		try {
 			
@@ -518,41 +518,44 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 	public void mouseExited(MouseEvent e) {}
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == close)
+		
+		if(e.getSource() == close) // 닫기 버튼 클릭 시 페이지 닫기
 			this.dispose();
-		else if(e.getSource() == delete) {
+		
+		else if(e.getSource() == delete) { // 예매 내역 삭제 버튼 클릭 시 삭제 후 테이블 최신화
 			delete_Reservation();
 			select_myReservation();
 		}
-		else if(e.getSource() == change_movie) {
-			if(ticketId == 0) {
+
+		else if(e.getSource() == change_movie) { // 영화 변경 버튼 클릭 시 영화 변경 폼 호출
+			if(ticketId == 0) { // 선택된 예매 내역이 없을 경우 메세지 표시
 				msg.showMessageDialog(null, "변경할 예매 내역을 선택해주세요.");
 				return;
 			}
-			ChangeMovie chmv = new ChangeMovie(con, ticketId, seatId, memberId, today);
-			select_myReservation();
+			ChangeMovie chmv = new ChangeMovie(con, movieId, ticketId, seatId, memberId, today); // 영화 변경 폼 호출
+			select_myReservation(); // 테이블 최신화
 		}
-		else if(e.getSource() == change_sche) {
-			
-			if(movieId == 0) {
+		
+		else if(e.getSource() == change_sche) {	// 일정 변경 버튼 클릭 시 일정 변경 폼 호출	
+			if(movieId == 0) { // 선택된 예매 내역이 없을 경우 메세지 표시
 				msg.showMessageDialog(null, "변경할 예매 내역을 선택해주세요.");
 				return;
-			}
-			
-			ChangeSchedule cs = new ChangeSchedule(con, movieId, ticketId, seatId, memberId, today);// 상영일정 선택 폼 호출
-			select_myReservation();
-		}		
+			}			
+			ChangeSchedule cs = new ChangeSchedule(con, movieId, ticketId, seatId, memberId, today);// 상영 일정 변경 폼 호출
+			select_myReservation(); // 테이블 최신화
+		}
+		
 	}
 	
-	private void select_myReservation() {
+	private void select_myReservation() { // 나의 예매 내역을 DB로부터 불러오는 메소드
 		
 		String query;
-		model.setNumRows(0);
+		model.setNumRows(0); // 테이블 초기화
 		
 		try {
 			
 			Statement stmt = con.createStatement();
-			query = "select s2.ticketId, movies.title, schedules.openingDate, s2.Hallid, s2.seatid, s2.sellingprice\r\n"
+			query = "select s2.ticketId, movies.title, schedules.openingDate, s2.Hallid, s2.seatid, s2.sellingprice\r\n" // 본인이 예매한 영화에 대한 정보를 탐색하는 쿼리문
 					+ "from movies, schedules, \r\n"
 					+ "(select ticketId, scheduleid, hallid, seatid, sellingprice\r\n"
 					+ "from tickets, (select reservationid from reservations where memberId = "
@@ -562,7 +565,7 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 			
 			ResultSet rs = stmt.executeQuery(query);
 			
-			while(rs.next()) {
+			while(rs.next()) { // 수행 결과를 테이블에 입력
 				
 				Vector factor = new Vector();
 				factor.add(rs.getInt(1));
@@ -581,23 +584,23 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 		}		
 	}
 	
-	private void delete_Reservation() {
+	private void delete_Reservation() { // 예매 내역 삭제 메소드
 		
 		String query;
 		
 		try {			
 			
-			if(ticketId == 0) throw new Exception();
+			if(ticketId == 0) throw new Exception(); // 선택된 예매 내역이 없을 경우 예외 처리
 			
 			Statement stmt = con.createStatement();
 			
-			query = "delete from tickets where ticketId = " + ticketId + ";";
+			query = "delete from tickets where ticketId = " + ticketId + ";"; // 티켓 삭제 쿼리문 수행
 			stmt.execute(query);
 			
-			query = "update seats set seatStatus = false where seatId = " + seatId + ";";
+			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // 좌석 상태 미사용으로 변경
 			stmt.execute(query);
 			
-			query = "delete from reservations where reservationId = " + reservationId + ";";
+			query = "delete from reservations where reservationId = " + reservationId + ";"; // 예매 내역 삭제
 			stmt.execute(query);	
 			
 			msg.showMessageDialog(null, "삭제가 완료되었습니다.");
@@ -610,7 +613,7 @@ class myReservation extends JFrame implements ActionListener, MouseListener{
 		
 }
 
-class ShowInformation extends JFrame implements ActionListener{
+class ShowInformation extends JFrame implements ActionListener{ // 예매 정보를 클릭하면 상세 정보를 표시해 주는 폼
 	
 	Connection con;
 	ResultSet rs;
@@ -623,7 +626,7 @@ class ShowInformation extends JFrame implements ActionListener{
 	JTextArea printArea = new JTextArea(19, 78);
 	JButton close = new JButton("닫기");
 	
-	public ShowInformation(Connection con, int ticketId) {
+	public ShowInformation(Connection con, int ticketId) { // 상세 정보 표시 폼 생성자
 		
 		this.con = con;
 		this.ticketId = ticketId;
@@ -646,7 +649,7 @@ class ShowInformation extends JFrame implements ActionListener{
 			scheduleId = rs.getInt(2);
 			hallId = rs.getInt(3);
 			
-			query = "Select * from Schedules where hallId = " +hallId+ ";";
+			query = "Select * from Schedules where hallId = " +hallId+ ";"; // 상영일정 정보 조회
 			rs=stmt.executeQuery(query);
 			printArea.append("상영일정\nScheduleId\tMovieId\tHallId\tOpeningDay\tDayofweek\tTimes\tStartTime\n");
 			while(rs.next()) {
@@ -660,7 +663,7 @@ class ShowInformation extends JFrame implements ActionListener{
 			}	  	  	 
 			printArea.append("\n");
 						
-	  	  	query = "Select * from Halls where hallId = " + hallId + ";";
+	  	  	query = "Select * from Halls where hallId = " + hallId + ";"; // 상영관 정보 조회
 			rs=stmt.executeQuery(query);
 			printArea.append("상영관\nHallId\tnumSeat\tHallStatus\n");
 			while(rs.next()) {
@@ -670,7 +673,7 @@ class ShowInformation extends JFrame implements ActionListener{
 			}	  	  	 
 			printArea.append("\n");
 			
-			query = "Select * from Tickets where ticketId = " + ticketId + ";";
+			query = "Select * from Tickets where ticketId = " + ticketId + ";"; // 티켓 정보 조회
 			rs=stmt.executeQuery(query);
 			printArea.append("티켓\nTicketId\tScheduleId\tHallId\tSeatId\tReservationId\tIssueStatus\tPrice\tSellingPrice\n");
 			while(rs.next()) {
@@ -708,7 +711,7 @@ class ShowInformation extends JFrame implements ActionListener{
 	
 }
 
-class ChangeMovie extends JFrame implements ActionListener, MouseListener {
+class ChangeMovie extends JFrame implements ActionListener, MouseListener { // 영화 변경 폼
 	
 	Connection con;
 	ResultSet rs;
@@ -717,6 +720,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 	int ticketId;
 	int memberId;
 	int seatId;
+	int currentMovieId;
 	String today;
 	
 	JOptionPane msg = new JOptionPane(); // 팝업 메세지 출력용 JOptionPane
@@ -740,13 +744,14 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 	
 	JTable resultTable;
 	
-	public ChangeMovie(Connection con, int ticketId, int seatId, int memberId, String today) {
+	public ChangeMovie(Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // 영화 변경 폼 생성자
 		
 		this.con = con;
 		this.ticketId = ticketId;
 		this.memberId = memberId;
 		this.today = today;
 		this.seatId = seatId;
+		this.currentMovieId = movieId;
 		
 		setTitle("영화 변경");
 		
@@ -755,7 +760,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 		
 		JPanel inputForm = new JPanel();
 		
-		inputForm.add(new JLabel("영화명"));
+		inputForm.add(new JLabel("영화명")); 
 		inputForm.add(inputTitle);
 		inputForm.add(new JLabel("    감독명"));
 		inputForm.add(inputDirector);
@@ -805,7 +810,12 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 			if(selectedId == 0) { // 영화를 선택하지 않았을 시 알림창 출력
 				msg.showMessageDialog(null, "영화를 선택해주세요.");
 				return;
-			}
+			}			
+			
+			if(selectedId == currentMovieId) { // 변경하려는 영화가 현재 예매 내역과 같은 영화일 경우 메세지 표시
+				msg.showMessageDialog(null, "현재 예매내역과 같은 영화입니다.\n일정 변경을 원하시면 이전 페이지에서 일정 변경을 선택해주세요.");
+				return;
+			}		
 
 			ChangeSchedule cs = new ChangeSchedule(con, selectedId, ticketId, seatId, memberId, today);// 상영일정 선택 폼 호출
 
@@ -836,7 +846,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 		JOptionPane msg = new JOptionPane();
 		String query = "";
 		boolean notFirst = false;
-		model.setNumRows(0);
+		model.setNumRows(0);	
 		
 		try {
 			
@@ -895,7 +905,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener {
 	
 }
 
-class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
+class ChangeSchedule extends JFrame implements ActionListener, MouseListener { // 일정 변경 폼
 	
 	Connection con;
 	JOptionPane msg = new JOptionPane(); 
@@ -908,6 +918,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 	int hallId;
 	int ticketId;
 	int seatId;
+	int currentScheId;
 	
 	JButton btn_reserve = new JButton("선택");
 	JButton btn_cancel = new JButton("취소");
@@ -923,7 +934,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 	
 	JTable schedulesTable = new JTable(model);
 	
-	public ChangeSchedule (Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // 생성자 및 폼 생성
+	public ChangeSchedule (Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // 일정 변경 폼 생성자
 		
 		this.con = con;
 		this.memberId = memberId; 
@@ -992,7 +1003,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 		}
 		
 		else if(e.getSource() == btn_cancel) { // 취소 선택 시 예매 창 종료
-			dispose();			
+			this.dispose();			
 		}
 		
 	}
@@ -1020,7 +1031,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 		
 		try {
 			Statement stmt = con.createStatement();
-			query = "Select scheduleId, hallId, openingDate, dayofweek, StartTime from schedules where MovieId = " + movieId;
+			query = "Select scheduleId, hallId, openingDate, dayofweek, StartTime from schedules where MovieId = " + movieId + ";";
 			
 			ResultSet rs = stmt.executeQuery(query);
 			
@@ -1043,7 +1054,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 		
 	}
 	
-	private void UpdateReservation() {
+	private void UpdateReservation() { // 일정 변경 메소드
 		
 		String query = "";
 		ResultSet count;
@@ -1053,23 +1064,33 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener {
 			
 			Statement stmt = con.createStatement();
 			
-			query = "update seats set seatStatus = false where seatId = " + seatId + ";";
-			stmt.execute(query);			
+			query = "select scheduleId from tickets where ticketId =" + ticketId +";"; // 원래 예매한 상영 일정 조회 후 저장 
+			count = stmt.executeQuery(query);
+			count.next();
+			currentScheId = count.getInt(1);
+			
+			if(scheduleId == currentScheId) { // 변경하려는 상영 일정이 원래 상영 일정과 중복되면 메세지 표시
+				msg.showMessageDialog(null, "현재 예매내역과 같은 상영일정입니다.\n일정 변경을 원하시면 다른 일정을 선택해주세요.");
+				return;
+			};
+			
+			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // 변경 전 좌석 사용여부 미사용으로 변경
+			stmt.executeUpdate(query);			
 			
 			count = stmt.executeQuery("select count(seatid) from seats;");
 			count.next();
 			newSeatId = count.getInt(1) + 1;
 			
-			query = "insert into seats values(" + newSeatId + ", " + hallId + ", true);";			
+			query = "insert into seats values(" + newSeatId + ", " + hallId + ", true);"; // 새로운 좌석 정보 등록
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET scheduleId =" + scheduleId + "where ticketId = " + ticketId + ";";
+			query = "UPDATE tickets SET scheduleId =" + scheduleId + " where ticketId = " + ticketId + ";"; // 티켓의 상영 일정 정보 변경
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET hallId=" + hallId + "where ticketId = " + ticketId + ";";
+			query = "UPDATE tickets SET hallId=" + hallId + " where ticketId = " + ticketId + ";"; // 티켓의 상영관 정보 변경
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET seatId =" + newSeatId + "where ticketId = " + ticketId + ";";
+			query = "UPDATE tickets SET seatId =" + newSeatId + " where ticketId = " + ticketId + ";"; // 티켓의 좌석 정보 변경
 			stmt.executeUpdate(query);
 						
 			msg.showMessageDialog(null, "변경이 완료되었습니다.");
