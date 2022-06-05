@@ -1778,7 +1778,7 @@ public class TheaterDB extends JFrame implements ActionListener {
 	String Driver = "";
 	String url = "jdbc:mysql://localhost:3306/madang?&serverTimezone=Asia/Seoul";
 	String userid = "madang";
-	String pwd = "madang123";
+	String pwd = "madang";
 
 	JButton btn1 = new JButton();
 	JButton btn2 = new JButton();
