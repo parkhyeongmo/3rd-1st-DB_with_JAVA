@@ -8,66 +8,66 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì› ì„ íƒì‹œ ì¶œë ¥ë˜ëŠ” í”„ë ˆì„
+class memberF extends JFrame implements ActionListener, MouseListener{ // È¸¿ø ¼±ÅÃ½Ã Ãâ·ÂµÇ´Â ÇÁ·¹ÀÓ
 	
-	Connection con; // SQL Connection ë° ì¿¼ë¦¬ ë™ì‘ ê²°ê³¼ ì¶œë ¥
+	Connection con; // SQL Connection ¹× Äõ¸® µ¿ÀÛ °á°ú Ãâ·Â
 	ResultSet rs;
 	
 	int memberId;
 	int selectedId = 0;	
 	String today = "2021-03-10";
 
-	JOptionPane msg = new JOptionPane(); // íŒì—… ë©”ì„¸ì§€ ì¶œë ¥ìš© JOptionPane
+	JOptionPane msg = new JOptionPane(); // ÆË¾÷ ¸Ş¼¼Áö Ãâ·Â¿ë JOptionPane
 	
-	JTextField inputTitle = new JTextField(12); // ê²€ìƒ‰ìš© ì…ë ¥ í¼
+	JTextField inputTitle = new JTextField(12); // °Ë»ö¿ë ÀÔ·Â Æû
 	JTextField inputDirector = new JTextField(12);
 	JTextField inputActor = new JTextField(12);
 	JTextField inputGenre = new JTextField(12);
 	JTextField selectedMovie = new JTextField(10);
-	JButton btn_movies = new JButton("ì¡°íšŒ"); // ê²€ìƒ‰ ë²„íŠ¼
-	JButton btn_reserve = new JButton("ì˜ˆë§¤"); // ì˜ˆë§¤ ë²„íŠ¼
-	JButton btn_inquiry = new JButton("ì˜ˆë§¤ ì¡°íšŒ"); // ì˜ˆë§¤ ì¡°íšŒ ë²„íŠ¼
+	JButton btn_movies = new JButton("Á¶È¸"); // °Ë»ö ¹öÆ°
+	JButton btn_reserve = new JButton("¿¹¸Å"); // ¿¹¸Å ¹öÆ°
+	JButton btn_inquiry = new JButton("¿¹¸Å Á¶È¸"); // ¿¹¸Å Á¶È¸ ¹öÆ°
 	
-	String[] movies_property = {"MovieId", "ì˜í™”ëª…", "ìƒì˜ì‹œê°„", "ìƒì˜ë“±ê¸‰", "ê°ë…ëª…", "ë°°ìš°ëª…", "ì¥ë¥´", "ì˜í™”ì†Œê°œ", "ê°œë´‰ì¼"}; 
-	DefaultTableModel model = new DefaultTableModel(movies_property, 0) {		// JTableë¡œ ì¶œë ¥í•  Model
+	String[] movies_property = {"MovieId", "¿µÈ­¸í", "»ó¿µ½Ã°£", "»ó¿µµî±Ş", "°¨µ¶¸í", "¹è¿ì¸í", "Àå¸£", "¿µÈ­¼Ò°³", "°³ºÀÀÏ"}; 
+	DefaultTableModel model = new DefaultTableModel(movies_property, 0) {		// JTable·Î Ãâ·ÂÇÒ Model
 		@Override
-		public boolean isCellEditable(int row, int column) { // í¸ì§‘ ê¸°ëŠ¥ ì œê±°
+		public boolean isCellEditable(int row, int column) { // ÆíÁı ±â´É Á¦°Å
 			return false;
 		}
 	};
 	
 	JTable resultTable;
 	
-	public memberF(Connection con, int memberId) { // ìƒì„±ì ë° í¼ ìƒì„±
+	public memberF(Connection con, int memberId) { // »ı¼ºÀÚ ¹× Æû »ı¼º
 		
 		this.con = con;
 		this.memberId = memberId;
 		
-		setTitle("íšŒì›");
+		setTitle("È¸¿ø");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 				
 		JPanel inputForm = new JPanel();
 		
-		inputForm.add(new JLabel("ì˜í™”ëª…"));
+		inputForm.add(new JLabel("¿µÈ­¸í"));
 		inputForm.add(inputTitle);
-		inputForm.add(new JLabel("    ê°ë…ëª…"));
+		inputForm.add(new JLabel("    °¨µ¶¸í"));
 		inputForm.add(inputDirector);
-		inputForm.add(new JLabel("    ë°°ìš°ëª…"));
+		inputForm.add(new JLabel("    ¹è¿ì¸í"));
 		inputForm.add(inputActor);
-		inputForm.add(new JLabel("    ì¥ë¥´"));
+		inputForm.add(new JLabel("    Àå¸£"));
 		inputForm.add(inputGenre);
 		inputForm.add(btn_movies);		
 		
 		JPanel reservePan = new JPanel();
-		selectedMovie.setEditable(false); // ì„ íƒëœ ì˜í™” ì œëª© ì¶œë ¥ í¼ í¸ì§‘ ê¸°ëŠ¥ ì œê±°		
+		selectedMovie.setEditable(false); // ¼±ÅÃµÈ ¿µÈ­ Á¦¸ñ Ãâ·Â Æû ÆíÁı ±â´É Á¦°Å		
 		
 		reservePan.add(btn_reserve);
 		reservePan.add(btn_inquiry);
-		reservePan.add(new JLabel(" íšŒì› ID: "+memberId));
-		reservePan.add(new JLabel(" /  ì˜¤ëŠ˜ ë‚ ì§œ: "+today));
-		reservePan.add(new JLabel(" / ì„ íƒëœ ì˜í™” "));
+		reservePan.add(new JLabel(" È¸¿ø ID: "+memberId));
+		reservePan.add(new JLabel(" /  ¿À´Ã ³¯Â¥: "+today));
+		reservePan.add(new JLabel(" / ¼±ÅÃµÈ ¿µÈ­ "));
 		reservePan.add(selectedMovie);
 
 		resultTable = new JTable(model);
@@ -78,41 +78,41 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì›
 		c.add(reservePan);
 		c.add(rsSP);
 				
-		btn_movies.addActionListener(this); // ì¡°íšŒ ë²„íŠ¼
-		btn_reserve.addActionListener(this); // ì˜ˆë§¤ ë²„íŠ¼
-		btn_inquiry.addActionListener(this); // ì˜ˆë§¤ ì¡°íšŒ ë²„íŠ¼
+		btn_movies.addActionListener(this); // Á¶È¸ ¹öÆ°
+		btn_reserve.addActionListener(this); // ¿¹¸Å ¹öÆ°
+		btn_inquiry.addActionListener(this); // ¿¹¸Å Á¶È¸ ¹öÆ°
 		
-		resultTable.addMouseListener(this); // ì¡°íšŒ ê²°ê³¼ í´ë¦­ ì‹œ ì´ë²¤íŠ¸ ì‚½ì…
+		resultTable.addMouseListener(this); // Á¶È¸ °á°ú Å¬¸¯ ½Ã ÀÌº¥Æ® »ğÀÔ
 		
 		setSize(900, 450);
 		setVisible(true);
 		
 	}
 	
-	public void actionPerformed(ActionEvent e) { // ë²„íŠ¼ í´ë¦­ì‹œ ë™ì‘ ì‚½ì…
+	public void actionPerformed(ActionEvent e) { // ¹öÆ° Å¬¸¯½Ã µ¿ÀÛ »ğÀÔ
 		
-		if(e.getSource() == btn_movies) { // ì˜í™” ê²€ìƒ‰ ì¡°íšŒ
+		if(e.getSource() == btn_movies) { // ¿µÈ­ °Ë»ö Á¶È¸
 			select_movie();
 		}
 		
-		else if(e.getSource() == btn_reserve) { // ì˜ˆë§¤ ë²„íŠ¼
+		else if(e.getSource() == btn_reserve) { // ¿¹¸Å ¹öÆ°
 			
-			if(selectedId == 0) { // ì˜í™”ë¥¼ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ì‹œ ì•Œë¦¼ì°½ ì¶œë ¥
-				msg.showMessageDialog(null, "ì˜í™”ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			if(selectedId == 0) { // ¿µÈ­¸¦ ¼±ÅÃÇÏÁö ¾Ê¾ÒÀ» ½Ã ¾Ë¸²Ã¢ Ãâ·Â
+				msg.showMessageDialog(null, "¿µÈ­¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}
 			
-			Reserve reserve = new Reserve(con, selectedId, memberId, today); // ì˜ˆë§¤ í¼ í˜¸ì¶œ
+			Reserve reserve = new Reserve(con, selectedId, memberId, today); // ¿¹¸Å Æû È£Ãâ
 		}
 		
 		else if(e.getSource() == btn_inquiry) {
-			myReservation myreserve = new myReservation(con, memberId, today); // ë‚˜ì˜ ì˜ˆë§¤ ë‚´ì—­ í¼ í˜¸ì¶œ
+			myReservation myreserve = new myReservation(con, memberId, today); // ³ªÀÇ ¿¹¸Å ³»¿ª Æû È£Ãâ
 		}
 		
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) { // JTable í´ë¦­ ì‹œ ì •ë³´ ìµœì‹ í™”
+	public void mouseClicked(MouseEvent e) { // JTable Å¬¸¯ ½Ã Á¤º¸ ÃÖ½ÅÈ­
 		int row = resultTable.getSelectedRow();
 		selectedId = (int) resultTable.getModel().getValueAt(row, 0);	
 		selectedMovie.setText(resultTable.getModel().getValueAt(row, 1).toString());
@@ -126,7 +126,7 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì›
 	@Override
 	public void mouseExited(MouseEvent e) {}
 	
-	private void select_movie() { // ê²€ìƒ‰ ì¡°íšŒ ê¸°ëŠ¥
+	private void select_movie() { // °Ë»ö Á¶È¸ ±â´É
 
 		JOptionPane msg = new JOptionPane();
 		String query = "";
@@ -135,7 +135,7 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì›
 		
 		try {
 			
-			query = "Select * from Movies where "; // ì¿¼ë¦¬ë¬¸ ì´ˆê¸°í™”
+			query = "Select * from Movies where "; // Äõ¸®¹® ÃÊ±âÈ­
 			
 			if(!inputTitle.getText().equals("")) {
 				query += "title LIKE '%" + inputTitle.getText() + "%'";
@@ -163,9 +163,9 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì›
 			query += ";";
 			
 			Statement stmt = con.createStatement();
-			rs = stmt.executeQuery(query); // ì¿¼ë¦¬ë¬¸ ì‹¤í–‰ í›„ ê²°ê³¼ë¥¼ ë°˜í™˜ë°›ì•„ ì €ì¥
+			rs = stmt.executeQuery(query); // Äõ¸®¹® ½ÇÇà ÈÄ °á°ú¸¦ ¹İÈ¯¹Ş¾Æ ÀúÀå
 			
-			while(rs.next()) { // JTableì— ì‚½ì…
+			while(rs.next()) { // JTable¿¡ »ğÀÔ
 				
 				Vector factor = new Vector();
 				factor.add(rs.getInt(1));
@@ -183,14 +183,14 @@ class memberF extends JFrame implements ActionListener, MouseListener{ // íšŒì›
 			}			
 			
 		}catch(SQLException exception) {
-			msg.showMessageDialog(null, "ê²€ìƒ‰ í‚¤ì›Œë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+			msg.showMessageDialog(null, "°Ë»ö Å°¿öµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.");
 		}
 		
 	}	
 	
 }
 
-class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤ í¼
+class Reserve extends JFrame implements ActionListener, MouseListener{ // ¿¹¸Å Æû
 	
 	Connection con;
 	JOptionPane msg = new JOptionPane(); 
@@ -203,16 +203,16 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 	int hallId;
 	int sellingPrice = 12000;
 	
-	String[] method = {"ì¹´ë“œ", "í˜„ê¸ˆ"};
-	String[] DC = {"ì¹´ë“œ í• ì¸", "í†µì‹ ì‚¬ í• ì¸", "ì—†ìŒ"};
+	String[] method = {"Ä«µå", "Çö±İ"};
+	String[] DC = {"Ä«µå ÇÒÀÎ", "Åë½Å»ç ÇÒÀÎ", "¾øÀ½"};
 	JComboBox<String> Payment = new JComboBox<String>(method);
 	JComboBox<String> discount = new JComboBox<String>(DC);
-	JButton btn_reserve = new JButton("ì˜ˆë§¤");
-	JButton btn_cancel = new JButton("ì·¨ì†Œ");
-	JTextField selectedSched = new JTextField(10); // ì„ íƒí•œ ìƒì˜ ì¼ì •ì„ ì¶œë ¥í•  í¼
+	JButton btn_reserve = new JButton("¿¹¸Å");
+	JButton btn_cancel = new JButton("Ãë¼Ò");
+	JTextField selectedSched = new JTextField(10); // ¼±ÅÃÇÑ »ó¿µ ÀÏÁ¤À» Ãâ·ÂÇÒ Æû
 	
-	String[] schedules_property = {"ScheduleId", "ìƒì˜ê´€", "ë‚ ì§œ", "ìš”ì¼","ì‹œê°„"}; 
-	DefaultTableModel model = new DefaultTableModel(schedules_property, 0) { // ì„ íƒí•œ ì˜í™”ì˜ ìƒì˜ ì¼ì •ì„ ì €ì¥í•  model		
+	String[] schedules_property = {"ScheduleId", "»ó¿µ°ü", "³¯Â¥", "¿äÀÏ","½Ã°£"}; 
+	DefaultTableModel model = new DefaultTableModel(schedules_property, 0) { // ¼±ÅÃÇÑ ¿µÈ­ÀÇ »ó¿µ ÀÏÁ¤À» ÀúÀåÇÒ model		
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
@@ -221,45 +221,45 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 	
 	JTable schedulesTable = new JTable(model);
 	
-	public Reserve(Connection con, int movieId, int memberId, String today) { // ìƒì„±ì ë° í¼ ìƒì„±
+	public Reserve(Connection con, int movieId, int memberId, String today) { // »ı¼ºÀÚ ¹× Æû »ı¼º
 		
 		this.con = con;
 		this.memberId = memberId; 
 		this.movieId = movieId;
 		this.today = today;
 		
-		setTitle("ì˜ˆë§¤");
+		setTitle("¿¹¸Å");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 		
-		selectedSched.setEditable(false); // ì„ íƒëœ ìƒì˜ ì¼ì • ì¶œë ¥ì°½ì˜ í¸ì§‘ ê¸°ëŠ¥ ì œê±°
+		selectedSched.setEditable(false); // ¼±ÅÃµÈ »ó¿µ ÀÏÁ¤ Ãâ·ÂÃ¢ÀÇ ÆíÁı ±â´É Á¦°Å
 		
-		JPanel selectPanel = new JPanel(); // ì»´í¬ë„ŒíŠ¸ë“¤ì„ ê·¸ë£¹í™”í•  JPanel ìƒì„±
+		JPanel selectPanel = new JPanel(); // ÄÄÆ÷³ÍÆ®µéÀ» ±×·ìÈ­ÇÒ JPanel »ı¼º
 		JPanel btnPanel = new JPanel();
 		
-		selectPanel.add(new JLabel("íšŒì›ì•„ì´ë””: " + memberId)); // JPanelì— ì»´í¬ë„ŒíŠ¸ë“¤ ì‚½ì…
-		selectPanel.add(new JLabel("/ ì˜¤ëŠ˜: " + today));			
-		selectPanel.add(new JLabel("/ ê²°ì œ ìˆ˜ë‹¨  "));
+		selectPanel.add(new JLabel("È¸¿ø¾ÆÀÌµğ: " + memberId)); // JPanel¿¡ ÄÄÆ÷³ÍÆ®µé »ğÀÔ
+		selectPanel.add(new JLabel("/ ¿À´Ã: " + today));			
+		selectPanel.add(new JLabel("/ °áÁ¦ ¼ö´Ü  "));
 		selectPanel.add(Payment);
-		selectPanel.add(new JLabel("  í• ì¸ ì„ íƒ  "));
+		selectPanel.add(new JLabel("  ÇÒÀÎ ¼±ÅÃ  "));
 		selectPanel.add(discount);
 		btnPanel.add(btn_reserve);
 		btnPanel.add(btn_cancel);
-		btnPanel.add(new JLabel("ì„ íƒëœ ìƒì˜ ì¼ì •"));		
+		btnPanel.add(new JLabel("¼±ÅÃµÈ »ó¿µ ÀÏÁ¤"));		
 		btnPanel.add(selectedSched);
 		
-		c.add(selectPanel); // í”„ë ˆì„ì— ì‚½ì…
+		c.add(selectPanel); // ÇÁ·¹ÀÓ¿¡ »ğÀÔ
 		c.add(btnPanel);
 		
 		JScrollPane rsSP = new JScrollPane(schedulesTable);
 		rsSP.setPreferredSize(new Dimension(850, 300));	
 		
-		select_Schedules(); // ìƒì˜ ì¼ì • ì¡°íšŒ
+		select_Schedules(); // »ó¿µ ÀÏÁ¤ Á¶È¸
 		
 		c.add(rsSP);
 		
-		schedulesTable.addMouseListener(this); // JTableê³¼ ë²„íŠ¼ì— ì´ë²¤íŠ¸ë¦¬ìŠ¤ë„ˆ ì‚½ì…
+		schedulesTable.addMouseListener(this); // JTable°ú ¹öÆ°¿¡ ÀÌº¥Æ®¸®½º³Ê »ğÀÔ
 		btn_reserve.addActionListener(this);
 		btn_cancel.addActionListener(this);
 		
@@ -270,39 +270,39 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == btn_reserve) { // ì˜ˆë§¤ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ 
+		if(e.getSource() == btn_reserve) { // ¿¹¸Å ¹öÆ°À» ´­·¶À» ¶§ 
 									
-			try { // í˜„ì¬ ë‚ ì§œì™€ ìƒì˜ ì¼ì •ì˜ ë‚ ì§œë¥¼ ë¹„êµí•˜ì—¬ ìƒì˜ì¼ì´ ì§€ë‚¬ìœ¼ë©´ ì•Œë¦¼ì°½ ì¶œë ¥
+			try { // ÇöÀç ³¯Â¥¿Í »ó¿µ ÀÏÁ¤ÀÇ ³¯Â¥¸¦ ºñ±³ÇÏ¿© »ó¿µÀÏÀÌ Áö³µÀ¸¸é ¾Ë¸²Ã¢ Ãâ·Â
 				String date1 = today;
 				String date2 = screenDay;	
 				
 				if(date1.compareTo(date2) > 0) {
-					msg.showMessageDialog(null, "ì´ë¯¸ ìƒì˜ ì¢…ë£Œëœ ì¼ì •ì…ë‹ˆë‹¤.");		
+					msg.showMessageDialog(null, "ÀÌ¹Ì »ó¿µ Á¾·áµÈ ÀÏÁ¤ÀÔ´Ï´Ù.");		
 					return;
 				}
 				
-			} catch (Exception e1) { // ìƒì˜ ì¼ì •ì´ ì„ íƒë˜ì§€ ì•Šì€ ê²½ìš° ì˜ˆì™¸ ì²˜ë¦¬
-				msg.showMessageDialog(null, "ìƒì˜ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			} catch (Exception e1) { // »ó¿µ ÀÏÁ¤ÀÌ ¼±ÅÃµÇÁö ¾ÊÀº °æ¿ì ¿¹¿Ü Ã³¸®
+				msg.showMessageDialog(null, "»ó¿µ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}			
 			
-			make_Reserve(); // ì˜ˆë§¤ ê¸°ëŠ¥ í˜¸ì¶œ	
+			make_Reserve(); // ¿¹¸Å ±â´É È£Ãâ	
 		
 		}
 		
-		else if(e.getSource() == btn_cancel) { // ì·¨ì†Œ ì„ íƒ ì‹œ ì˜ˆë§¤ ì°½ ì¢…ë£Œ
+		else if(e.getSource() == btn_cancel) { // Ãë¼Ò ¼±ÅÃ ½Ã ¿¹¸Å Ã¢ Á¾·á
 			dispose();			
 		}
 		
 	}
 		
 	@Override
-	public void mouseClicked(MouseEvent e) { // ë§ˆìš°ìŠ¤ë¡œ Table í´ë¦­ ì‹œ ì •ë³´ ìµœì‹ í™”
+	public void mouseClicked(MouseEvent e) { // ¸¶¿ì½º·Î Table Å¬¸¯ ½Ã Á¤º¸ ÃÖ½ÅÈ­
 		int row = schedulesTable.getSelectedRow();
 		scheduleId = (int) schedulesTable.getModel().getValueAt(row, 0);
 		hallId = (int) schedulesTable.getModel().getValueAt(row, 1);	
 		screenDay = schedulesTable.getModel().getValueAt(row, 2).toString();
-		selectedSched.setText("" + scheduleId + "ë²ˆ");
+		selectedSched.setText("" + scheduleId + "¹ø");
 	}	
 	@Override
 	public void mousePressed(MouseEvent e) {}
@@ -313,7 +313,7 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 	@Override
 	public void mouseExited(MouseEvent e) {}
 	
-	private void select_Schedules() { // ìƒì˜ ì¼ì • ì¡°íšŒ ê¸°ëŠ¥
+	private void select_Schedules() { // »ó¿µ ÀÏÁ¤ Á¶È¸ ±â´É
 		
 		String query;	
 		
@@ -337,12 +337,12 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 			}
 			
 		}catch(SQLException exceptions) {
-			msg.showMessageDialog(null, "ì¿¼ë¦¬ ì—°ê²° ì˜¤ë¥˜");
+			msg.showMessageDialog(null, "Äõ¸® ¿¬°á ¿À·ù");
 		}		
 		
 	}
 	
-	private void make_Reserve() { // ì˜ˆë§¤ ê¸°ëŠ¥
+	private void make_Reserve() { // ¿¹¸Å ±â´É
 		
 		String query = "";
 		ResultSet count;
@@ -351,7 +351,7 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 		int seatId = 0;
 		
 		if(hallId == 0) {
-			msg.showMessageDialog(null, "ìƒì˜ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			msg.showMessageDialog(null, "»ó¿µ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 			return;
 		}		
 		
@@ -363,12 +363,12 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 			count.next();
 			reserveId = count.getInt(1) + 1;
 			
-			if(discount.getSelectedItem().toString().equals("ì—†ìŒ")) {				
-				query = "insert into reservations values(" + reserveId + ", '" + Payment.getSelectedItem().toString() + "', 'ê²°ì œëŒ€ê¸°', 12000, "+ memberId +", str_to_date('" + today +  "', '%Y-%m-%d'));";
+			if(discount.getSelectedItem().toString().equals("¾øÀ½")) {				
+				query = "insert into reservations values(" + reserveId + ", '" + Payment.getSelectedItem().toString() + "', '°áÁ¦´ë±â', 12000, "+ memberId +", str_to_date('" + today +  "', '%Y-%m-%d'));";
 			}
 			
 			else {
-				query = "insert into reservations values(" + reserveId + ", '" + Payment.getSelectedItem().toString() + "', 'ê²°ì œëŒ€ê¸°', 9000, "+ memberId +", str_to_date('" + today +  "', '%Y-%m-%d'));";			
+				query = "insert into reservations values(" + reserveId + ", '" + Payment.getSelectedItem().toString() + "', '°áÁ¦´ë±â', 9000, "+ memberId +", str_to_date('" + today +  "', '%Y-%m-%d'));";			
 				sellingPrice = 9000;
 			}
 			
@@ -396,26 +396,26 @@ class Reserve extends JFrame implements ActionListener, MouseListener{ // ì˜ˆë§¤
 			query = query.replaceFirst("\\*", "" + sellingPrice);
 			
 			stmt.executeUpdate(query);			
-			msg.showMessageDialog(null, "ì˜ˆë§¤ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			msg.showMessageDialog(null, "¿¹¸Å°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 			
 		}catch(SQLException exception) {
-			msg.showMessageDialog(null, "ìƒì˜ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			msg.showMessageDialog(null, "»ó¿µ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 		}
 	}
 	
 }
 
-class myReservation extends JFrame implements ActionListener, MouseListener{ // ë‚˜ì˜ ì˜ˆë§¤ ë‚´ì—­ í¼
+class myReservation extends JFrame implements ActionListener, MouseListener{ // ³ªÀÇ ¿¹¸Å ³»¿ª Æû
 	
 	Connection con;
 	ResultSet rs;
 	
 	JOptionPane msg = new JOptionPane(); 
-	JButton delete = new JButton("ì‚­ì œ");
-	JButton change_movie = new JButton("ì˜í™” ë³€ê²½");
-	JButton change_sche = new JButton("ì¼ì • ë³€ê²½");
-	JButton close = new JButton("ë‹«ê¸°");
-	JTextField selectedReserve = new JTextField(10); // ì„ íƒí•œ ìƒì˜ ì¼ì •ì„ ì¶œë ¥í•  í¼
+	JButton delete = new JButton("»èÁ¦");
+	JButton change_movie = new JButton("¿µÈ­ º¯°æ");
+	JButton change_sche = new JButton("ÀÏÁ¤ º¯°æ");
+	JButton close = new JButton("´İ±â");
+	JTextField selectedReserve = new JTextField(10); // ¼±ÅÃÇÑ »ó¿µ ÀÏÁ¤À» Ãâ·ÂÇÒ Æû
 		
 	String title;
 	String today;
@@ -425,8 +425,8 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 	int reservationId;
 	int movieId;
 	
-	String[] myReserve_property = {"í‹°ì¼“ë²ˆí˜¸", "ì˜í™”ëª…", "ìƒì˜ì¼", "ìƒì˜ê´€ë²ˆí˜¸", "ì¢Œì„ë²ˆí˜¸", "íŒë§¤ê°€ê²©"}; 
-	DefaultTableModel model = new DefaultTableModel(myReserve_property, 0) { // ì„ íƒí•œ ì˜í™”ì˜ ìƒì˜ ì¼ì •ì„ ì €ì¥í•  model		
+	String[] myReserve_property = {"Æ¼ÄÏ¹øÈ£", "¿µÈ­¸í", "»ó¿µÀÏ", "»ó¿µ°ü¹øÈ£", "ÁÂ¼®¹øÈ£", "ÆÇ¸Å°¡°İ"}; 
+	DefaultTableModel model = new DefaultTableModel(myReserve_property, 0) { // ¼±ÅÃÇÑ ¿µÈ­ÀÇ »ó¿µ ÀÏÁ¤À» ÀúÀåÇÒ model		
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
@@ -435,13 +435,13 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 	
 	JTable myReserveTable = new JTable(model);	
 	
-	public myReservation(Connection con, int memberId, String today) { // ë‚˜ì˜ ì˜ˆë§¤ ë‚´ì—­ í¼ ìƒì„±ì
+	public myReservation(Connection con, int memberId, String today) { // ³ªÀÇ ¿¹¸Å ³»¿ª Æû »ı¼ºÀÚ
 		
 		this.con = con;
 		this.memberId = memberId;
 		this.today = today;
 		
-		setTitle("ë‚˜ì˜ ì˜ˆë§¤ ë‚´ì—­");
+		setTitle("³ªÀÇ ¿¹¸Å ³»¿ª");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
@@ -451,12 +451,12 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 		
 		selectedReserve.setEditable(false);
 		
-		select_myReservation(); // ìƒì˜ ì¼ì • ì¡°íšŒ
+		select_myReservation(); // »ó¿µ ÀÏÁ¤ Á¶È¸
 		
 		JPanel upper = new JPanel();
 		
-		upper.add(new JLabel("íšŒì›ID: " + memberId));
-		upper.add(new JLabel(" / ì„ íƒëœ í‹°ì¼“ ë²ˆí˜¸: "));
+		upper.add(new JLabel("È¸¿øID: " + memberId));
+		upper.add(new JLabel(" / ¼±ÅÃµÈ Æ¼ÄÏ ¹øÈ£: "));
 		upper.add(selectedReserve);
 		upper.add(delete);
 		upper.add(change_movie);
@@ -478,11 +478,11 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) { // ë§ˆìš°ìŠ¤ë¡œ Table í´ë¦­ ì‹œ ì •ë³´ ìµœì‹ í™”
+	public void mouseClicked(MouseEvent e) { // ¸¶¿ì½º·Î Table Å¬¸¯ ½Ã Á¤º¸ ÃÖ½ÅÈ­
 		int row = myReserveTable.getSelectedRow();
 		ticketId = (int)myReserveTable.getModel().getValueAt(row, 0);	
 		title = myReserveTable.getModel().getValueAt(row, 1).toString();	
-		ShowInformation show = new ShowInformation(con, ticketId);	 // í´ë¦­í•œ ì˜ˆë§¤ ë‚´ì—­ì— ëŒ€í•œ ìƒì„¸ ì •ë³´ ì¶œë ¥ í¼ í˜¸ì¶œ	
+		ShowInformation show = new ShowInformation(con, ticketId);	 // Å¬¸¯ÇÑ ¿¹¸Å ³»¿ª¿¡ ´ëÇÑ »ó¼¼ Á¤º¸ Ãâ·Â Æû È£Ãâ	
 		
 		try {
 			
@@ -519,43 +519,43 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == close) // ë‹«ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜ì´ì§€ ë‹«ê¸°
+		if(e.getSource() == close) // ´İ±â ¹öÆ° Å¬¸¯ ½Ã ÆäÀÌÁö ´İ±â
 			this.dispose();
 		
-		else if(e.getSource() == delete) { // ì˜ˆë§¤ ë‚´ì—­ ì‚­ì œ ë²„íŠ¼ í´ë¦­ ì‹œ ì‚­ì œ í›„ í…Œì´ë¸” ìµœì‹ í™”
+		else if(e.getSource() == delete) { // ¿¹¸Å ³»¿ª »èÁ¦ ¹öÆ° Å¬¸¯ ½Ã »èÁ¦ ÈÄ Å×ÀÌºí ÃÖ½ÅÈ­
 			delete_Reservation();
 			select_myReservation();
 		}
 
-		else if(e.getSource() == change_movie) { // ì˜í™” ë³€ê²½ ë²„íŠ¼ í´ë¦­ ì‹œ ì˜í™” ë³€ê²½ í¼ í˜¸ì¶œ
-			if(ticketId == 0) { // ì„ íƒëœ ì˜ˆë§¤ ë‚´ì—­ì´ ì—†ì„ ê²½ìš° ë©”ì„¸ì§€ í‘œì‹œ
-				msg.showMessageDialog(null, "ë³€ê²½í•  ì˜ˆë§¤ ë‚´ì—­ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+		else if(e.getSource() == change_movie) { // ¿µÈ­ º¯°æ ¹öÆ° Å¬¸¯ ½Ã ¿µÈ­ º¯°æ Æû È£Ãâ
+			if(ticketId == 0) { // ¼±ÅÃµÈ ¿¹¸Å ³»¿ªÀÌ ¾øÀ» °æ¿ì ¸Ş¼¼Áö Ç¥½Ã
+				msg.showMessageDialog(null, "º¯°æÇÒ ¿¹¸Å ³»¿ªÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}
-			ChangeMovie chmv = new ChangeMovie(con, movieId, ticketId, seatId, memberId, today); // ì˜í™” ë³€ê²½ í¼ í˜¸ì¶œ
-			select_myReservation(); // í…Œì´ë¸” ìµœì‹ í™”
+			ChangeMovie chmv = new ChangeMovie(con, movieId, ticketId, seatId, memberId, today); // ¿µÈ­ º¯°æ Æû È£Ãâ
+			select_myReservation(); // Å×ÀÌºí ÃÖ½ÅÈ­
 		}
 		
-		else if(e.getSource() == change_sche) {	// ì¼ì • ë³€ê²½ ë²„íŠ¼ í´ë¦­ ì‹œ ì¼ì • ë³€ê²½ í¼ í˜¸ì¶œ	
-			if(movieId == 0) { // ì„ íƒëœ ì˜ˆë§¤ ë‚´ì—­ì´ ì—†ì„ ê²½ìš° ë©”ì„¸ì§€ í‘œì‹œ
-				msg.showMessageDialog(null, "ë³€ê²½í•  ì˜ˆë§¤ ë‚´ì—­ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+		else if(e.getSource() == change_sche) {	// ÀÏÁ¤ º¯°æ ¹öÆ° Å¬¸¯ ½Ã ÀÏÁ¤ º¯°æ Æû È£Ãâ	
+			if(movieId == 0) { // ¼±ÅÃµÈ ¿¹¸Å ³»¿ªÀÌ ¾øÀ» °æ¿ì ¸Ş¼¼Áö Ç¥½Ã
+				msg.showMessageDialog(null, "º¯°æÇÒ ¿¹¸Å ³»¿ªÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}			
-			ChangeSchedule cs = new ChangeSchedule(con, movieId, ticketId, seatId, memberId, today);// ìƒì˜ ì¼ì • ë³€ê²½ í¼ í˜¸ì¶œ
-			select_myReservation(); // í…Œì´ë¸” ìµœì‹ í™”
+			ChangeSchedule cs = new ChangeSchedule(con, movieId, ticketId, seatId, memberId, today);// »ó¿µ ÀÏÁ¤ º¯°æ Æû È£Ãâ
+			select_myReservation(); // Å×ÀÌºí ÃÖ½ÅÈ­
 		}
 		
 	}
 	
-	private void select_myReservation() { // ë‚˜ì˜ ì˜ˆë§¤ ë‚´ì—­ì„ DBë¡œë¶€í„° ë¶ˆëŸ¬ì˜¤ëŠ” ë©”ì†Œë“œ
+	private void select_myReservation() { // ³ªÀÇ ¿¹¸Å ³»¿ªÀ» DB·ÎºÎÅÍ ºÒ·¯¿À´Â ¸Ş¼Òµå
 		
 		String query;
-		model.setNumRows(0); // í…Œì´ë¸” ì´ˆê¸°í™”
+		model.setNumRows(0); // Å×ÀÌºí ÃÊ±âÈ­
 		
 		try {
 			
 			Statement stmt = con.createStatement();
-			query = "select s2.ticketId, movies.title, schedules.openingDate, s2.Hallid, s2.seatid, s2.sellingprice\r\n" // ë³¸ì¸ì´ ì˜ˆë§¤í•œ ì˜í™”ì— ëŒ€í•œ ì •ë³´ë¥¼ íƒìƒ‰í•˜ëŠ” ì¿¼ë¦¬ë¬¸
+			query = "select s2.ticketId, movies.title, schedules.openingDate, s2.Hallid, s2.seatid, s2.sellingprice\r\n" // º»ÀÎÀÌ ¿¹¸ÅÇÑ ¿µÈ­¿¡ ´ëÇÑ Á¤º¸¸¦ Å½»öÇÏ´Â Äõ¸®¹®
 					+ "from movies, schedules, \r\n"
 					+ "(select ticketId, scheduleid, hallid, seatid, sellingprice\r\n"
 					+ "from tickets, (select reservationid from reservations where memberId = "
@@ -565,7 +565,7 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 			
 			ResultSet rs = stmt.executeQuery(query);
 			
-			while(rs.next()) { // ìˆ˜í–‰ ê²°ê³¼ë¥¼ í…Œì´ë¸”ì— ì…ë ¥
+			while(rs.next()) { // ¼öÇà °á°ú¸¦ Å×ÀÌºí¿¡ ÀÔ·Â
 				
 				Vector factor = new Vector();
 				factor.add(rs.getInt(1));
@@ -580,40 +580,40 @@ class myReservation extends JFrame implements ActionListener, MouseListener{ // 
 			}			
 			
 		}catch(SQLException exceptions) {
-			msg.showMessageDialog(null, "ì¿¼ë¦¬ ì—°ê²° ì˜¤ë¥˜");
+			msg.showMessageDialog(null, "Äõ¸® ¿¬°á ¿À·ù");
 		}		
 	}
 	
-	private void delete_Reservation() { // ì˜ˆë§¤ ë‚´ì—­ ì‚­ì œ ë©”ì†Œë“œ
+	private void delete_Reservation() { // ¿¹¸Å ³»¿ª »èÁ¦ ¸Ş¼Òµå
 		
 		String query;
 		
 		try {			
 			
-			if(ticketId == 0) throw new Exception(); // ì„ íƒëœ ì˜ˆë§¤ ë‚´ì—­ì´ ì—†ì„ ê²½ìš° ì˜ˆì™¸ ì²˜ë¦¬
+			if(ticketId == 0) throw new Exception(); // ¼±ÅÃµÈ ¿¹¸Å ³»¿ªÀÌ ¾øÀ» °æ¿ì ¿¹¿Ü Ã³¸®
 			
 			Statement stmt = con.createStatement();
 			
-			query = "delete from tickets where ticketId = " + ticketId + ";"; // í‹°ì¼“ ì‚­ì œ ì¿¼ë¦¬ë¬¸ ìˆ˜í–‰
+			query = "delete from tickets where ticketId = " + ticketId + ";"; // Æ¼ÄÏ »èÁ¦ Äõ¸®¹® ¼öÇà
 			stmt.execute(query);
 			
-			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // ì¢Œì„ ìƒíƒœ ë¯¸ì‚¬ìš©ìœ¼ë¡œ ë³€ê²½
+			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // ÁÂ¼® »óÅÂ ¹Ì»ç¿ëÀ¸·Î º¯°æ
 			stmt.execute(query);
 			
-			query = "delete from reservations where reservationId = " + reservationId + ";"; // ì˜ˆë§¤ ë‚´ì—­ ì‚­ì œ
+			query = "delete from reservations where reservationId = " + reservationId + ";"; // ¿¹¸Å ³»¿ª »èÁ¦
 			stmt.execute(query);	
 			
-			msg.showMessageDialog(null, "ì‚­ì œê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			msg.showMessageDialog(null, "»èÁ¦°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 			
 		}catch(Exception exception) {
-			msg.showMessageDialog(null, "ì‚­ì œí•  ì˜ˆë§¤ ë‚´ì—­ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");			
+			msg.showMessageDialog(null, "»èÁ¦ÇÒ ¿¹¸Å ³»¿ªÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");			
 		}
 		
 	}
 		
 }
 
-class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´ë¥¼ í´ë¦­í•˜ë©´ ìƒì„¸ ì •ë³´ë¥¼ í‘œì‹œí•´ ì£¼ëŠ” í¼
+class ShowInformation extends JFrame implements ActionListener{ // ¿¹¸Å Á¤º¸¸¦ Å¬¸¯ÇÏ¸é »ó¼¼ Á¤º¸¸¦ Ç¥½ÃÇØ ÁÖ´Â Æû
 	
 	Connection con;
 	ResultSet rs;
@@ -624,14 +624,14 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 	int hallId;
 
 	JTextArea printArea = new JTextArea(19, 78);
-	JButton close = new JButton("ë‹«ê¸°");
+	JButton close = new JButton("´İ±â");
 	
-	public ShowInformation(Connection con, int ticketId) { // ìƒì„¸ ì •ë³´ í‘œì‹œ í¼ ìƒì„±ì
+	public ShowInformation(Connection con, int ticketId) { // »ó¼¼ Á¤º¸ Ç¥½Ã Æû »ı¼ºÀÚ
 		
 		this.con = con;
 		this.ticketId = ticketId;
 		
-		setTitle("ì˜ˆë§¤ ë‚´ì—­ ìƒì„¸ ì¡°íšŒ");
+		setTitle("¿¹¸Å ³»¿ª »ó¼¼ Á¶È¸");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
@@ -649,9 +649,9 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 			scheduleId = rs.getInt(2);
 			hallId = rs.getInt(3);
 			
-			query = "Select * from Schedules where hallId = " +hallId+ ";"; // ìƒì˜ì¼ì • ì •ë³´ ì¡°íšŒ
+			query = "Select * from Schedules where scheduleId = " +scheduleId+ ";"; // »ó¿µÀÏÁ¤ Á¤º¸ Á¶È¸
 			rs=stmt.executeQuery(query);
-			printArea.append("ìƒì˜ì¼ì •\nScheduleId\tMovieId\tHallId\tOpeningDay\tDayofweek\tTimes\tStartTime\n");
+			printArea.append("»ó¿µÀÏÁ¤\nScheduleId\tMovieId\tHallId\tOpeningDay\tDayofweek\tTimes\tStartTime\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -663,9 +663,9 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 			}	  	  	 
 			printArea.append("\n");
 						
-	  	  	query = "Select * from Halls where hallId = " + hallId + ";"; // ìƒì˜ê´€ ì •ë³´ ì¡°íšŒ
+	  	  	query = "Select * from Halls where hallId = " + hallId + ";"; // »ó¿µ°ü Á¤º¸ Á¶È¸
 			rs=stmt.executeQuery(query);
-			printArea.append("ìƒì˜ê´€\nHallId\tnumSeat\tHallStatus\n");
+			printArea.append("»ó¿µ°ü\nHallId\tnumSeat\tHallStatus\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -673,9 +673,9 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 			}	  	  	 
 			printArea.append("\n");
 			
-			query = "Select * from Tickets where ticketId = " + ticketId + ";"; // í‹°ì¼“ ì •ë³´ ì¡°íšŒ
+			query = "Select * from Tickets where ticketId = " + ticketId + ";"; // Æ¼ÄÏ Á¤º¸ Á¶È¸
 			rs=stmt.executeQuery(query);
-			printArea.append("í‹°ì¼“\nTicketId\tScheduleId\tHallId\tSeatId\tReservationId\tIssueStatus\tPrice\tSellingPrice\n");
+			printArea.append("Æ¼ÄÏ\nTicketId\tScheduleId\tHallId\tSeatId\tReservationId\tIssueStatus\tPrice\tSellingPrice\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -690,7 +690,7 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 			
 			
 		}catch (SQLException e) {
-			printArea.setText("SQL ì—°ê²° ì˜¤ë¥˜");
+			printArea.setText("SQL ¿¬°á ¿À·ù");
 		} 
 		
 		c.add(close);
@@ -711,7 +711,7 @@ class ShowInformation extends JFrame implements ActionListener{ // ì˜ˆë§¤ ì •ë³´
 	
 }
 
-class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì˜í™” ë³€ê²½ í¼
+class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ¿µÈ­ º¯°æ Æû
 	
 	Connection con;
 	ResultSet rs;
@@ -723,28 +723,28 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 	int currentMovieId;
 	String today;
 	
-	JOptionPane msg = new JOptionPane(); // íŒì—… ë©”ì„¸ì§€ ì¶œë ¥ìš© JOptionPane
+	JOptionPane msg = new JOptionPane(); // ÆË¾÷ ¸Ş¼¼Áö Ãâ·Â¿ë JOptionPane
 	
-	JTextField inputTitle = new JTextField(12); // ê²€ìƒ‰ìš© ì…ë ¥ í¼
+	JTextField inputTitle = new JTextField(12); // °Ë»ö¿ë ÀÔ·Â Æû
 	JTextField inputDirector = new JTextField(12);
 	JTextField inputActor = new JTextField(12);
 	JTextField inputGenre = new JTextField(12);
 	JTextField selectedMovie = new JTextField(10);
-	JButton btn_movies = new JButton("ì¡°íšŒ"); // ê²€ìƒ‰ ë²„íŠ¼
-	JButton btn_reserve = new JButton("ì„ íƒ"); // ì˜ˆë§¤ ë²„íŠ¼
-	JButton btn_close = new JButton("ì·¨ì†Œ"); // ì·¨ì†Œ ë²„íŠ¼ 
+	JButton btn_movies = new JButton("Á¶È¸"); // °Ë»ö ¹öÆ°
+	JButton btn_reserve = new JButton("¼±ÅÃ"); // ¿¹¸Å ¹öÆ°
+	JButton btn_close = new JButton("Ãë¼Ò"); // Ãë¼Ò ¹öÆ° 
 	
-	String[] movies_property = {"MovieId", "ì˜í™”ëª…", "ìƒì˜ì‹œê°„", "ìƒì˜ë“±ê¸‰", "ê°ë…ëª…", "ë°°ìš°ëª…", "ì¥ë¥´", "ì˜í™”ì†Œê°œ", "ê°œë´‰ì¼"}; 
-	DefaultTableModel model = new DefaultTableModel(movies_property, 0) {		// JTableë¡œ ì¶œë ¥í•  Model
+	String[] movies_property = {"MovieId", "¿µÈ­¸í", "»ó¿µ½Ã°£", "»ó¿µµî±Ş", "°¨µ¶¸í", "¹è¿ì¸í", "Àå¸£", "¿µÈ­¼Ò°³", "°³ºÀÀÏ"}; 
+	DefaultTableModel model = new DefaultTableModel(movies_property, 0) {		// JTable·Î Ãâ·ÂÇÒ Model
 		@Override
-		public boolean isCellEditable(int row, int column) { // í¸ì§‘ ê¸°ëŠ¥ ì œê±°
+		public boolean isCellEditable(int row, int column) { // ÆíÁı ±â´É Á¦°Å
 			return false;
 		}
 	};
 	
 	JTable resultTable;
 	
-	public ChangeMovie(Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // ì˜í™” ë³€ê²½ í¼ ìƒì„±ì
+	public ChangeMovie(Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // ¿µÈ­ º¯°æ Æû »ı¼ºÀÚ
 		
 		this.con = con;
 		this.ticketId = ticketId;
@@ -753,31 +753,31 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 		this.seatId = seatId;
 		this.currentMovieId = movieId;
 		
-		setTitle("ì˜í™” ë³€ê²½");
+		setTitle("¿µÈ­ º¯°æ");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 		
 		JPanel inputForm = new JPanel();
 		
-		inputForm.add(new JLabel("ì˜í™”ëª…")); 
+		inputForm.add(new JLabel("¿µÈ­¸í")); 
 		inputForm.add(inputTitle);
-		inputForm.add(new JLabel("    ê°ë…ëª…"));
+		inputForm.add(new JLabel("    °¨µ¶¸í"));
 		inputForm.add(inputDirector);
-		inputForm.add(new JLabel("    ë°°ìš°ëª…"));
+		inputForm.add(new JLabel("    ¹è¿ì¸í"));
 		inputForm.add(inputActor);
-		inputForm.add(new JLabel("    ì¥ë¥´"));
+		inputForm.add(new JLabel("    Àå¸£"));
 		inputForm.add(inputGenre);
 		inputForm.add(btn_movies);		
 		
 		JPanel reservePan = new JPanel();
-		selectedMovie.setEditable(false); // ì„ íƒëœ ì˜í™” ì œëª© ì¶œë ¥ í¼ í¸ì§‘ ê¸°ëŠ¥ ì œê±°		
+		selectedMovie.setEditable(false); // ¼±ÅÃµÈ ¿µÈ­ Á¦¸ñ Ãâ·Â Æû ÆíÁı ±â´É Á¦°Å		
 		
 		reservePan.add(btn_reserve);
 		reservePan.add(btn_close);
-		reservePan.add(new JLabel(" íšŒì› ID: "+memberId));
-		reservePan.add(new JLabel(" /  ì˜¤ëŠ˜ ë‚ ì§œ: "+today));
-		reservePan.add(new JLabel(" / ì„ íƒëœ ì˜í™” "));
+		reservePan.add(new JLabel(" È¸¿ø ID: "+memberId));
+		reservePan.add(new JLabel(" /  ¿À´Ã ³¯Â¥: "+today));
+		reservePan.add(new JLabel(" / ¼±ÅÃµÈ ¿µÈ­ "));
 		reservePan.add(selectedMovie);
 
 		resultTable = new JTable(model);
@@ -788,36 +788,36 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 		c.add(reservePan);
 		c.add(rsSP);
 				
-		btn_movies.addActionListener(this); // ì¡°íšŒ ë²„íŠ¼
-		btn_reserve.addActionListener(this); // ì˜ˆë§¤ ë²„íŠ¼
-		btn_close.addActionListener(this); // ì·¨ì†Œ ë²„íŠ¼
+		btn_movies.addActionListener(this); // Á¶È¸ ¹öÆ°
+		btn_reserve.addActionListener(this); // ¿¹¸Å ¹öÆ°
+		btn_close.addActionListener(this); // Ãë¼Ò ¹öÆ°
 		
-		resultTable.addMouseListener(this); // ì¡°íšŒ ê²°ê³¼ í´ë¦­ ì‹œ ì´ë²¤íŠ¸ ì‚½ì…
+		resultTable.addMouseListener(this); // Á¶È¸ °á°ú Å¬¸¯ ½Ã ÀÌº¥Æ® »ğÀÔ
 				
 		setSize(900, 450);
 		setVisible(true);
 		
 	}
 	
-	public void actionPerformed(ActionEvent e) { // ë²„íŠ¼ í´ë¦­ì‹œ ë™ì‘ ì‚½ì…
+	public void actionPerformed(ActionEvent e) { // ¹öÆ° Å¬¸¯½Ã µ¿ÀÛ »ğÀÔ
 		
-		if(e.getSource() == btn_movies) { // ì˜í™” ê²€ìƒ‰ ì¡°íšŒ
+		if(e.getSource() == btn_movies) { // ¿µÈ­ °Ë»ö Á¶È¸
 			select_movie();
 		}
 		
-		else if(e.getSource() == btn_reserve) { // ì˜ˆë§¤ ë²„íŠ¼
+		else if(e.getSource() == btn_reserve) { // ¿¹¸Å ¹öÆ°
 			
-			if(selectedId == 0) { // ì˜í™”ë¥¼ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ì‹œ ì•Œë¦¼ì°½ ì¶œë ¥
-				msg.showMessageDialog(null, "ì˜í™”ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			if(selectedId == 0) { // ¿µÈ­¸¦ ¼±ÅÃÇÏÁö ¾Ê¾ÒÀ» ½Ã ¾Ë¸²Ã¢ Ãâ·Â
+				msg.showMessageDialog(null, "¿µÈ­¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}			
 			
-			if(selectedId == currentMovieId) { // ë³€ê²½í•˜ë ¤ëŠ” ì˜í™”ê°€ í˜„ì¬ ì˜ˆë§¤ ë‚´ì—­ê³¼ ê°™ì€ ì˜í™”ì¼ ê²½ìš° ë©”ì„¸ì§€ í‘œì‹œ
-				msg.showMessageDialog(null, "í˜„ì¬ ì˜ˆë§¤ë‚´ì—­ê³¼ ê°™ì€ ì˜í™”ì…ë‹ˆë‹¤.\nì¼ì • ë³€ê²½ì„ ì›í•˜ì‹œë©´ ì´ì „ í˜ì´ì§€ì—ì„œ ì¼ì • ë³€ê²½ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			if(selectedId == currentMovieId) { // º¯°æÇÏ·Á´Â ¿µÈ­°¡ ÇöÀç ¿¹¸Å ³»¿ª°ú °°Àº ¿µÈ­ÀÏ °æ¿ì ¸Ş¼¼Áö Ç¥½Ã
+				msg.showMessageDialog(null, "ÇöÀç ¿¹¸Å³»¿ª°ú °°Àº ¿µÈ­ÀÔ´Ï´Ù.\nÀÏÁ¤ º¯°æÀ» ¿øÇÏ½Ã¸é ÀÌÀü ÆäÀÌÁö¿¡¼­ ÀÏÁ¤ º¯°æÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}		
 
-			ChangeSchedule cs = new ChangeSchedule(con, selectedId, ticketId, seatId, memberId, today);// ìƒì˜ì¼ì • ì„ íƒ í¼ í˜¸ì¶œ
+			ChangeSchedule cs = new ChangeSchedule(con, selectedId, ticketId, seatId, memberId, today);// »ó¿µÀÏÁ¤ ¼±ÅÃ Æû È£Ãâ
 
 		}
 		
@@ -827,7 +827,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) { // JTable í´ë¦­ ì‹œ ì •ë³´ ìµœì‹ í™”
+	public void mouseClicked(MouseEvent e) { // JTable Å¬¸¯ ½Ã Á¤º¸ ÃÖ½ÅÈ­
 		int row = resultTable.getSelectedRow();
 		selectedId = (int) resultTable.getModel().getValueAt(row, 0);	
 		selectedMovie.setText(resultTable.getModel().getValueAt(row, 1).toString());
@@ -841,7 +841,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 	@Override
 	public void mouseExited(MouseEvent e) {}
 	
-	private void select_movie() { // ê²€ìƒ‰ ì¡°íšŒ ê¸°ëŠ¥
+	private void select_movie() { // °Ë»ö Á¶È¸ ±â´É
 
 		JOptionPane msg = new JOptionPane();
 		String query = "";
@@ -850,7 +850,7 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 		
 		try {
 			
-			query = "Select * from Movies where "; // ì¿¼ë¦¬ë¬¸ ì´ˆê¸°í™”
+			query = "Select * from Movies where "; // Äõ¸®¹® ÃÊ±âÈ­
 			
 			if(!inputTitle.getText().equals("")) {
 				query += "title LIKE '%" + inputTitle.getText() + "%'";
@@ -878,9 +878,9 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 			query += ";";
 			
 			Statement stmt = con.createStatement();
-			rs = stmt.executeQuery(query); // ì¿¼ë¦¬ë¬¸ ì‹¤í–‰ í›„ ê²°ê³¼ë¥¼ ë°˜í™˜ë°›ì•„ ì €ì¥
+			rs = stmt.executeQuery(query); // Äõ¸®¹® ½ÇÇà ÈÄ °á°ú¸¦ ¹İÈ¯¹Ş¾Æ ÀúÀå
 			
-			while(rs.next()) { // JTableì— ì‚½ì…
+			while(rs.next()) { // JTable¿¡ »ğÀÔ
 				
 				Vector factor = new Vector();
 				factor.add(rs.getInt(1));
@@ -898,14 +898,14 @@ class ChangeMovie extends JFrame implements ActionListener, MouseListener { // ì
 			}			
 			
 		}catch(SQLException exception) {
-			msg.showMessageDialog(null, "ê²€ìƒ‰ í‚¤ì›Œë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+			msg.showMessageDialog(null, "°Ë»ö Å°¿öµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.");
 		}
 		
 	}	
 	
 }
 
-class ChangeSchedule extends JFrame implements ActionListener, MouseListener { // ì¼ì • ë³€ê²½ í¼
+class ChangeSchedule extends JFrame implements ActionListener, MouseListener { // ÀÏÁ¤ º¯°æ Æû
 	
 	Connection con;
 	JOptionPane msg = new JOptionPane(); 
@@ -920,12 +920,12 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 	int seatId;
 	int currentScheId;
 	
-	JButton btn_reserve = new JButton("ì„ íƒ");
-	JButton btn_cancel = new JButton("ì·¨ì†Œ");
-	JTextField selectedSched = new JTextField(10); // ì„ íƒí•œ ìƒì˜ ì¼ì •ì„ ì¶œë ¥í•  í¼
+	JButton btn_reserve = new JButton("¼±ÅÃ");
+	JButton btn_cancel = new JButton("Ãë¼Ò");
+	JTextField selectedSched = new JTextField(10); // ¼±ÅÃÇÑ »ó¿µ ÀÏÁ¤À» Ãâ·ÂÇÒ Æû
 	
-	String[] schedules_property = {"ScheduleId", "ìƒì˜ê´€", "ë‚ ì§œ", "ìš”ì¼","ì‹œê°„"}; 
-	DefaultTableModel model = new DefaultTableModel(schedules_property, 0) { // ì„ íƒí•œ ì˜í™”ì˜ ìƒì˜ ì¼ì •ì„ ì €ì¥í•  model		
+	String[] schedules_property = {"ScheduleId", "»ó¿µ°ü", "³¯Â¥", "¿äÀÏ","½Ã°£"}; 
+	DefaultTableModel model = new DefaultTableModel(schedules_property, 0) { // ¼±ÅÃÇÑ ¿µÈ­ÀÇ »ó¿µ ÀÏÁ¤À» ÀúÀåÇÒ model		
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
@@ -934,7 +934,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 	
 	JTable schedulesTable = new JTable(model);
 	
-	public ChangeSchedule (Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // ì¼ì • ë³€ê²½ í¼ ìƒì„±ì
+	public ChangeSchedule (Connection con, int movieId, int ticketId, int seatId, int memberId, String today) { // ÀÏÁ¤ º¯°æ Æû »ı¼ºÀÚ
 		
 		this.con = con;
 		this.memberId = memberId; 
@@ -943,35 +943,35 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 		this.ticketId = ticketId;
 		this.seatId = seatId;
 		
-		setTitle("ìƒì˜ì¼ì • ì„ íƒ");
+		setTitle("»ó¿µÀÏÁ¤ ¼±ÅÃ");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 		
-		selectedSched.setEditable(false); // ì„ íƒëœ ìƒì˜ ì¼ì • ì¶œë ¥ì°½ì˜ í¸ì§‘ ê¸°ëŠ¥ ì œê±°
+		selectedSched.setEditable(false); // ¼±ÅÃµÈ »ó¿µ ÀÏÁ¤ Ãâ·ÂÃ¢ÀÇ ÆíÁı ±â´É Á¦°Å
 		
-		JPanel selectPanel = new JPanel(); // ì»´í¬ë„ŒíŠ¸ë“¤ì„ ê·¸ë£¹í™”í•  JPanel ìƒì„±
+		JPanel selectPanel = new JPanel(); // ÄÄÆ÷³ÍÆ®µéÀ» ±×·ìÈ­ÇÒ JPanel »ı¼º
 		JPanel btnPanel = new JPanel();
 		
-		selectPanel.add(new JLabel("íšŒì›ID: " + memberId)); // JPanelì— ì»´í¬ë„ŒíŠ¸ë“¤ ì‚½ì…
-		selectPanel.add(new JLabel("/ ì˜¤ëŠ˜: " + today));		
+		selectPanel.add(new JLabel("È¸¿øID: " + memberId)); // JPanel¿¡ ÄÄÆ÷³ÍÆ®µé »ğÀÔ
+		selectPanel.add(new JLabel("/ ¿À´Ã: " + today));		
 
 		btnPanel.add(btn_reserve);
 		btnPanel.add(btn_cancel);
-		btnPanel.add(new JLabel("ì„ íƒëœ ìƒì˜ ì¼ì •"));		
+		btnPanel.add(new JLabel("¼±ÅÃµÈ »ó¿µ ÀÏÁ¤"));		
 		btnPanel.add(selectedSched);
 		
-		c.add(selectPanel); // í”„ë ˆì„ì— ì‚½ì…
+		c.add(selectPanel); // ÇÁ·¹ÀÓ¿¡ »ğÀÔ
 		c.add(btnPanel);
 		
 		JScrollPane rsSP = new JScrollPane(schedulesTable);
 		rsSP.setPreferredSize(new Dimension(850, 300));	
 		
-		select_Schedules(); // ìƒì˜ ì¼ì • ì¡°íšŒ
+		select_Schedules(); // »ó¿µ ÀÏÁ¤ Á¶È¸
 		
 		c.add(rsSP);
 		
-		schedulesTable.addMouseListener(this); // JTableê³¼ ë²„íŠ¼ì— ì´ë²¤íŠ¸ë¦¬ìŠ¤ë„ˆ ì‚½ì…
+		schedulesTable.addMouseListener(this); // JTable°ú ¹öÆ°¿¡ ÀÌº¥Æ®¸®½º³Ê »ğÀÔ
 		btn_reserve.addActionListener(this);
 		btn_cancel.addActionListener(this);
 		
@@ -982,39 +982,39 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == btn_reserve) { // ì˜ˆë§¤ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ 
+		if(e.getSource() == btn_reserve) { // ¿¹¸Å ¹öÆ°À» ´­·¶À» ¶§ 
 									
-			try { // í˜„ì¬ ë‚ ì§œì™€ ìƒì˜ ì¼ì •ì˜ ë‚ ì§œë¥¼ ë¹„êµí•˜ì—¬ ìƒì˜ì¼ì´ ì§€ë‚¬ìœ¼ë©´ ì•Œë¦¼ì°½ ì¶œë ¥
+			try { // ÇöÀç ³¯Â¥¿Í »ó¿µ ÀÏÁ¤ÀÇ ³¯Â¥¸¦ ºñ±³ÇÏ¿© »ó¿µÀÏÀÌ Áö³µÀ¸¸é ¾Ë¸²Ã¢ Ãâ·Â
 				String date1 = today;
 				String date2 = screenDay;	
 				
 				if(date1.compareTo(date2) > 0) {
-					msg.showMessageDialog(null, "ì´ë¯¸ ìƒì˜ ì¢…ë£Œëœ ì¼ì •ì…ë‹ˆë‹¤.");		
+					msg.showMessageDialog(null, "ÀÌ¹Ì »ó¿µ Á¾·áµÈ ÀÏÁ¤ÀÔ´Ï´Ù.");		
 					return;
 				}
 				
-			} catch (Exception e1) { // ìƒì˜ ì¼ì •ì´ ì„ íƒë˜ì§€ ì•Šì€ ê²½ìš° ì˜ˆì™¸ ì²˜ë¦¬
-				msg.showMessageDialog(null, "ìƒì˜ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			} catch (Exception e1) { // »ó¿µ ÀÏÁ¤ÀÌ ¼±ÅÃµÇÁö ¾ÊÀº °æ¿ì ¿¹¿Ü Ã³¸®
+				msg.showMessageDialog(null, "»ó¿µ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			}			
 			
-			UpdateReservation(); // ì˜ˆë§¤ ê¸°ëŠ¥ í˜¸ì¶œ	
+			UpdateReservation(); // ¿¹¸Å ±â´É È£Ãâ	
 		
 		}
 		
-		else if(e.getSource() == btn_cancel) { // ì·¨ì†Œ ì„ íƒ ì‹œ ì˜ˆë§¤ ì°½ ì¢…ë£Œ
+		else if(e.getSource() == btn_cancel) { // Ãë¼Ò ¼±ÅÃ ½Ã ¿¹¸Å Ã¢ Á¾·á
 			this.dispose();			
 		}
 		
 	}
 		
 	@Override
-	public void mouseClicked(MouseEvent e) { // ë§ˆìš°ìŠ¤ë¡œ Table í´ë¦­ ì‹œ ì •ë³´ ìµœì‹ í™”
+	public void mouseClicked(MouseEvent e) { // ¸¶¿ì½º·Î Table Å¬¸¯ ½Ã Á¤º¸ ÃÖ½ÅÈ­
 		int row = schedulesTable.getSelectedRow();
 		scheduleId = (int) schedulesTable.getModel().getValueAt(row, 0);
 		hallId = (int) schedulesTable.getModel().getValueAt(row, 1);	
 		screenDay = schedulesTable.getModel().getValueAt(row, 2).toString();
-		selectedSched.setText("" + scheduleId + "ë²ˆ");
+		selectedSched.setText("" + scheduleId + "¹ø");
 	}	
 	@Override
 	public void mousePressed(MouseEvent e) {}
@@ -1025,7 +1025,7 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 	@Override
 	public void mouseExited(MouseEvent e) {}
 	
-	private void select_Schedules() { // ìƒì˜ ì¼ì • ì¡°íšŒ ê¸°ëŠ¥
+	private void select_Schedules() { // »ó¿µ ÀÏÁ¤ Á¶È¸ ±â´É
 		
 		String query;	
 		
@@ -1049,12 +1049,12 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 			}
 			
 		}catch(SQLException exceptions) {
-			msg.showMessageDialog(null, "ì¿¼ë¦¬ ì—°ê²° ì˜¤ë¥˜");
+			msg.showMessageDialog(null, "Äõ¸® ¿¬°á ¿À·ù");
 		}		
 		
 	}
 	
-	private void UpdateReservation() { // ì¼ì • ë³€ê²½ ë©”ì†Œë“œ
+	private void UpdateReservation() { // ÀÏÁ¤ º¯°æ ¸Ş¼Òµå
 		
 		String query = "";
 		ResultSet count;
@@ -1064,39 +1064,39 @@ class ChangeSchedule extends JFrame implements ActionListener, MouseListener { /
 			
 			Statement stmt = con.createStatement();
 			
-			query = "select scheduleId from tickets where ticketId =" + ticketId +";"; // ì›ë˜ ì˜ˆë§¤í•œ ìƒì˜ ì¼ì • ì¡°íšŒ í›„ ì €ì¥ 
+			query = "select scheduleId from tickets where ticketId =" + ticketId +";"; // ¿ø·¡ ¿¹¸ÅÇÑ »ó¿µ ÀÏÁ¤ Á¶È¸ ÈÄ ÀúÀå 
 			count = stmt.executeQuery(query);
 			count.next();
 			currentScheId = count.getInt(1);
 			
-			if(scheduleId == currentScheId) { // ë³€ê²½í•˜ë ¤ëŠ” ìƒì˜ ì¼ì •ì´ ì›ë˜ ìƒì˜ ì¼ì •ê³¼ ì¤‘ë³µë˜ë©´ ë©”ì„¸ì§€ í‘œì‹œ
-				msg.showMessageDialog(null, "í˜„ì¬ ì˜ˆë§¤ë‚´ì—­ê³¼ ê°™ì€ ìƒì˜ì¼ì •ì…ë‹ˆë‹¤.\nì¼ì • ë³€ê²½ì„ ì›í•˜ì‹œë©´ ë‹¤ë¥¸ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			if(scheduleId == currentScheId) { // º¯°æÇÏ·Á´Â »ó¿µ ÀÏÁ¤ÀÌ ¿ø·¡ »ó¿µ ÀÏÁ¤°ú Áßº¹µÇ¸é ¸Ş¼¼Áö Ç¥½Ã
+				msg.showMessageDialog(null, "ÇöÀç ¿¹¸Å³»¿ª°ú °°Àº »ó¿µÀÏÁ¤ÀÔ´Ï´Ù.\nÀÏÁ¤ º¯°æÀ» ¿øÇÏ½Ã¸é ´Ù¸¥ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 				return;
 			};
 			
-			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // ë³€ê²½ ì „ ì¢Œì„ ì‚¬ìš©ì—¬ë¶€ ë¯¸ì‚¬ìš©ìœ¼ë¡œ ë³€ê²½
+			query = "update seats set seatStatus = false where seatId = " + seatId + ";"; // º¯°æ Àü ÁÂ¼® »ç¿ë¿©ºÎ ¹Ì»ç¿ëÀ¸·Î º¯°æ
 			stmt.executeUpdate(query);			
 			
 			count = stmt.executeQuery("select count(seatid) from seats;");
 			count.next();
 			newSeatId = count.getInt(1) + 1;
 			
-			query = "insert into seats values(" + newSeatId + ", " + hallId + ", true);"; // ìƒˆë¡œìš´ ì¢Œì„ ì •ë³´ ë“±ë¡
+			query = "insert into seats values(" + newSeatId + ", " + hallId + ", true);"; // »õ·Î¿î ÁÂ¼® Á¤º¸ µî·Ï
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET scheduleId =" + scheduleId + " where ticketId = " + ticketId + ";"; // í‹°ì¼“ì˜ ìƒì˜ ì¼ì • ì •ë³´ ë³€ê²½
+			query = "UPDATE tickets SET scheduleId =" + scheduleId + " where ticketId = " + ticketId + ";"; // Æ¼ÄÏÀÇ »ó¿µ ÀÏÁ¤ Á¤º¸ º¯°æ
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET hallId=" + hallId + " where ticketId = " + ticketId + ";"; // í‹°ì¼“ì˜ ìƒì˜ê´€ ì •ë³´ ë³€ê²½
+			query = "UPDATE tickets SET hallId=" + hallId + " where ticketId = " + ticketId + ";"; // Æ¼ÄÏÀÇ »ó¿µ°ü Á¤º¸ º¯°æ
 			stmt.executeUpdate(query);
 			
-			query = "UPDATE tickets SET seatId =" + newSeatId + " where ticketId = " + ticketId + ";"; // í‹°ì¼“ì˜ ì¢Œì„ ì •ë³´ ë³€ê²½
+			query = "UPDATE tickets SET seatId =" + newSeatId + " where ticketId = " + ticketId + ";"; // Æ¼ÄÏÀÇ ÁÂ¼® Á¤º¸ º¯°æ
 			stmt.executeUpdate(query);
 						
-			msg.showMessageDialog(null, "ë³€ê²½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			msg.showMessageDialog(null, "º¯°æÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 			
 		}catch(SQLException exception) {
-			msg.showMessageDialog(null, "ìƒì˜ ì¼ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
+			msg.showMessageDialog(null, "»ó¿µ ÀÏÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä.");
 		}
 		
 	}
@@ -1115,7 +1115,7 @@ class adminF extends JFrame implements ActionListener {
 
 	public adminF(Connection con) {
 
-		setTitle("ê´€ë¦¬ì");
+		setTitle("°ü¸®ÀÚ");
 
 		this.con = con;
 
@@ -1123,11 +1123,11 @@ class adminF extends JFrame implements ActionListener {
 		c.setLayout(new FlowLayout());
 		printArea.setEditable(false);
 
-		btn_init = new JButton("ì´ˆê¸°í™”");
-		btn_insert = new JButton("ì…ë ¥");
-		btn_update = new JButton("ë³€ê²½");
-		btn_delete = new JButton("ì‚­ì œ");
-		btn_select = new JButton("ê²€ìƒ‰");
+		btn_init = new JButton("ÃÊ±âÈ­");
+		btn_insert = new JButton("ÀÔ·Â");
+		btn_update = new JButton("º¯°æ");
+		btn_delete = new JButton("»èÁ¦");
+		btn_select = new JButton("°Ë»ö");
 
 		JPanel btns = new JPanel();
 
@@ -1181,7 +1181,7 @@ class adminF extends JFrame implements ActionListener {
 			
 			query = "Select * from Movies;";
 			ResultSet rs=stmt.executeQuery(query);
-			printArea.append("ì˜í™”\nMovieId\tTitle\tRunningTime\tRating\tDirector\t\tActor\t\tGenre\tSynopsis\t\tReleaseDay\n");
+			printArea.append("¿µÈ­\nMovieId\tTitle\tRunningTime\tRating\tDirector\t\tActor\t\tGenre\tSynopsis\t\tReleaseDay\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getString(2));
@@ -1197,7 +1197,7 @@ class adminF extends JFrame implements ActionListener {
 			
 	  	  	query = "Select * from Halls;";
 			rs=stmt.executeQuery(query);
-			printArea.append("ìƒì˜ê´€\nHallId\tnumSeat\tHallStatus\n");
+			printArea.append("»ó¿µ°ü\nHallId\tnumSeat\tHallStatus\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -1207,7 +1207,7 @@ class adminF extends JFrame implements ActionListener {
 			
 			query = "Select * from Schedules;";
 			rs=stmt.executeQuery(query);
-			printArea.append("ìƒì˜ì¼ì •\nScheduleId\tMovieId\tHallId\tOpeningDay\tDayofweek\tTimes\tStartTime\n");
+			printArea.append("»ó¿µÀÏÁ¤\nScheduleId\tMovieId\tHallId\tOpeningDay\tDayofweek\tTimes\tStartTime\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -1221,7 +1221,7 @@ class adminF extends JFrame implements ActionListener {
 			
 			query = "Select * from Members;";
 			rs=stmt.executeQuery(query);
-			printArea.append("íšŒì›\nMemberId\tMemberName\tPhone\t\tEmail\n");
+			printArea.append("È¸¿ø\nMemberId\tMemberName\tPhone\t\tEmail\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getString(2));
@@ -1232,7 +1232,7 @@ class adminF extends JFrame implements ActionListener {
 	  	  	
 			query = "Select * from Reservations;";
 			rs=stmt.executeQuery(query);
-			printArea.append("ì˜ˆë§¤ì •ë³´\nReservationId\tPayment\tPayStatus\tPrice\tMemberId\tPayDate\n");
+			printArea.append("¿¹¸ÅÁ¤º¸\nReservationId\tPayment\tPayStatus\tPrice\tMemberId\tPayDate\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getString(2));
@@ -1245,7 +1245,7 @@ class adminF extends JFrame implements ActionListener {
 			
 			query = "Select * from Seats;";
 			rs=stmt.executeQuery(query);
-			printArea.append("ì¢Œì„\nSeatId\tHallId\tSeatStatus\n");
+			printArea.append("ÁÂ¼®\nSeatId\tHallId\tSeatStatus\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -1255,7 +1255,7 @@ class adminF extends JFrame implements ActionListener {
 			
 			query = "Select * from Tickets;";
 			rs=stmt.executeQuery(query);
-			printArea.append("í‹°ì¼“\nTicketId\tScheduleId\tHallId\tSeatId\tReservationId\tIssueStatus\tPrice\tSellingPrice\n");
+			printArea.append("Æ¼ÄÏ\nTicketId\tScheduleId\tHallId\tSeatId\tReservationId\tIssueStatus\tPrice\tSellingPrice\n");
 			while(rs.next()) {
 	  	  		printArea.append(""+rs.getInt(1));
 	  	  		printArea.append("\t"+rs.getInt(2));
@@ -1268,7 +1268,7 @@ class adminF extends JFrame implements ActionListener {
 			}	  	  	 
 			printArea.append("\n");			
 		}catch (SQLException e) {
-			printArea.setText("SQL ì—°ê²° ì˜¤ë¥˜");
+			printArea.setText("SQL ¿¬°á ¿À·ù");
 		} 
 		
 	}
@@ -1284,7 +1284,7 @@ class Initial extends JFrame implements ActionListener {
 
 	public Initial(Connection con) {
 
-		setTitle("ì´ˆê¸°í™”");
+		setTitle("ÃÊ±âÈ­");
 
 		this.con = con;
 		msg = new JOptionPane();
@@ -1295,7 +1295,7 @@ class Initial extends JFrame implements ActionListener {
 		btn_yes = new JButton("Yes");
 		btn_no = new JButton("No");
 
-		JLabel notice = new JLabel("DBë¥¼ ì´ˆê¸°í™” í•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
+		JLabel notice = new JLabel("DB¸¦ ÃÊ±âÈ­ ÇÏ½Ã°Ú½À´Ï±î?");
 		notice.setHorizontalAlignment(JLabel.CENTER);
 
 		JPanel btn_set = new JPanel();
@@ -1370,25 +1370,25 @@ class Initial extends JFrame implements ActionListener {
 					+ "  foreign key (Reservationid) references reservations(reservationId)\r\n" + "  );");
 
 			stmt.execute(
-					"insert into movies values(1, 'ë²”ì£„ë„ì‹œ2', 020000, 15, 'ì´ìƒìš©', 'ë§ˆë™ì„', 'ë²”ì£„, ì•¡ì…˜', 'ê¸ˆì²œì„œ ê°•ë ¥ë°˜ì€ ë² íŠ¸ë‚¨ìœ¼ë¡œ ë„ì£¼í•œ ìš©ì˜ìë¥¼ ì¸ë„ë°›ì•„ ì˜¤ë¼ëŠ” ë¯¸ì…˜ì„ ë°›ëŠ”ë‹¤.', str_to_date('2021-01-14', '%Y-%m-%d'));");
+					"insert into movies values(1, '¹üÁËµµ½Ã2', 020000, 15, 'ÀÌ»ó¿ë', '¸¶µ¿¼®', '¹üÁË, ¾×¼Ç', '±İÃµ¼­ °­·Â¹İÀº º£Æ®³²À¸·Î µµÁÖÇÑ ¿ëÀÇÀÚ¸¦ ÀÎµµ¹Ş¾Æ ¿À¶ó´Â ¹Ì¼ÇÀ» ¹Ş´Â´Ù.', str_to_date('2021-01-14', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(2, 'ì‹œë„¤ë§ˆì²œêµ­', 020400, 0, 'ì¥¬ì„¸í˜í† ë¥´ë‚˜í† ë ˆ', 'í•„ë¦½ëŠì™€ë ˆ', 'ë“œë¼ë§ˆ', 'ì¬ê°œë´‰, ì˜í™”ì¸ í† í† ì˜ ì´ì•¼ê¸°', str_to_date('2021-02-22', '%Y-%m-%d'));\r\n");
+					"insert into movies values(2, '½Ã³×¸¶Ãµ±¹', 020400, 0, 'Áê¼¼ÆäÅä¸£³ªÅä·¹', 'ÇÊ¸³´À¿Í·¹', 'µå¶ó¸¶', 'Àç°³ºÀ, ¿µÈ­ÀÎ ÅäÅäÀÇ ÀÌ¾ß±â', str_to_date('2021-02-22', '%Y-%m-%d'));\r\n");
 			stmt.execute(
-					"insert into movies values(3, 'ì•„ì´ì–¸ë§¨', 020500, 12, 'ì¡´íŒŒë¸Œë¡œ', 'ë¡œë²„íŠ¸ë‹¤ìš°ë‹ˆì£¼ë‹ˆì–´', 'SF, ì•¡ì…˜', 'í•˜ì´í…Œí¬ ìŠˆí¼ íˆì–´ë¡œì˜ íƒ„ìƒ!', str_to_date('2021-03-30', '%Y-%m-%d'));");
+					"insert into movies values(3, '¾ÆÀÌ¾ğ¸Ç', 020500, 12, 'Á¸ÆÄºê·Î', '·Î¹öÆ®´Ù¿ì´ÏÁÖ´Ï¾î', 'SF, ¾×¼Ç', 'ÇÏÀÌÅ×Å© ½´ÆÛ È÷¾î·ÎÀÇ Åº»ı!', str_to_date('2021-03-30', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(4, 'ì‡¼ìƒí¬íƒˆì¶œ', 022200, 15, 'í”„ë­í¬ë‹¤ë¼ë³¸íŠ¸', 'íŒ€ë¡œë¹ˆìŠ¤', 'ë“œë¼ë§ˆ', 'ë‘ë ¤ì›€ì€ ë„ˆë¥¼ ì£„ìˆ˜ë¡œ ê°€ë‘ê³  í¬ë§ì€ ë„ˆë¥¼ ììœ ë¡­ê²Œ í•˜ë¦¬ë¼', str_to_date('2021-04-24', '%Y-%m-%d'));");
+					"insert into movies values(4, '¼î»ıÅ©Å»Ãâ', 022200, 15, 'ÇÁ·©Å©´Ù¶óº»Æ®', 'ÆÀ·Îºó½º', 'µå¶ó¸¶', 'µÎ·Á¿òÀº ³Ê¸¦ ÁË¼ö·Î °¡µÎ°í Èñ¸ÁÀº ³Ê¸¦ ÀÚÀ¯·Ó°Ô ÇÏ¸®¶ó', str_to_date('2021-04-24', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(5, 'í´ë˜ì‹', 021200, 12, 'ê³½ì¬ìš©', 'ì†ì˜ˆì§„', 'ë©œë¡œ', 'ìš°ì—°íˆ ê·¸ëŸ¬ë‚˜ ë°˜ë“œì‹œ, ìŠí˜€ì§„ ì•½ì†ì´ ê¹¨ì–´ë‚¬ë‹¤.', str_to_date('2021-05-30', '%Y-%m-%d'));");
+					"insert into movies values(5, 'Å¬·¡½Ä', 021200, 12, '°ûÀç¿ë', '¼Õ¿¹Áø', '¸á·Î', '¿ì¿¬È÷ ±×·¯³ª ¹İµå½Ã, ÀØÇôÁø ¾à¼ÓÀÌ ±ú¾î³µ´Ù.', str_to_date('2021-05-30', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(6, 'íƒ€ì´íƒ€ë‹‰', 031400, 15, 'ì œì„ìŠ¤ì¹´ë©”ë¡ ', 'ë ˆì˜¤ë‚˜ë¥´ë„ë””ì¹´í”„ë¦¬ì˜¤', 'ë©œë¡œ', 'ì˜ì›ìœ¼ë¡œ ê¸°ì–µë  ì„¸ê¸°ì˜ ëŸ¬ë¸Œ ìŠ¤í† ë¦¬', str_to_date('2021-06-01', '%Y-%m-%d'));");
+					"insert into movies values(6, 'Å¸ÀÌÅ¸´Ğ', 031400, 15, 'Á¦ÀÓ½ºÄ«¸Ş·Ğ', '·¹¿À³ª¸£µµµğÄ«ÇÁ¸®¿À', '¸á·Î', '¿µ¿øÀ¸·Î ±â¾ïµÉ ¼¼±âÀÇ ·¯ºê ½ºÅä¸®', str_to_date('2021-06-01', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(7, 'ë ˆì˜¹', 021200, 19, 'ë¤½ë² ì†¡', 'ì¥ë¥´ë…¸', 'ë²”ì£„, ì•¡ì…˜', 'ë‚˜ë„ í–‰ë³µí•´ ì§€ê³  ì‹¶ì–´. ì ë„ ìê³ , ë¿Œë¦¬ë„ ë‚´ë¦´ê±°ì•¼.', str_to_date('2021-07-11', '%Y-%m-%d'));");
+					"insert into movies values(7, '·¹¿Ë', 021200, 19, '·óº£¼Û', 'Àå¸£³ë', '¹üÁË, ¾×¼Ç', '³ªµµ Çàº¹ÇØ Áö°í ½Í¾î. Àáµµ ÀÚ°í, »Ñ¸®µµ ³»¸±°Å¾ß.', str_to_date('2021-07-11', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(8, 'ì‚´ì¸ì˜ì¶”ì–µ', 021200, 15, 'ë´‰ì¤€í˜¸', 'ì†¡ê°•í˜¸', 'ë²”ì£„', 'ë¯¸ì¹˜ë„ë¡ ì¡ê³  ì‹¶ì—ˆìŠµë‹ˆë‹¤. ë‹¹ì‹ ì€ ëˆ„êµ¬ì‹­ë‹ˆê¹Œ', str_to_date('2021-08-25', '%Y-%m-%d'));");
+					"insert into movies values(8, '»ìÀÎÀÇÃß¾ï', 021200, 15, 'ºÀÁØÈ£', '¼Û°­È£', '¹üÁË', '¹ÌÄ¡µµ·Ï Àâ°í ½Í¾ú½À´Ï´Ù. ´ç½ÅÀº ´©±¸½Ê´Ï±î', str_to_date('2021-08-25', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(9, 'ì¥¬ë¼ê¸°ì›”ë“œ', 022700, 12, 'ì½œë¦°íŠ¸ë ˆë³´ë¡œìš°', 'í¬ë¦¬ìŠ¤í”„ë«', 'ì•¡ì…˜, ëª¨í—˜', 'ì´ì œ ëª¨ë“  ê²ƒì´ ëë‚œë‹¤.', str_to_date('2021-09-01', '%Y-%m-%d'));");
+					"insert into movies values(9, 'Áê¶ó±â¿ùµå', 022700, 12, 'Äİ¸°Æ®·¹º¸·Î¿ì', 'Å©¸®½ºÇÁ·§', '¾×¼Ç, ¸ğÇè', 'ÀÌÁ¦ ¸ğµç °ÍÀÌ ³¡³­´Ù.', str_to_date('2021-09-01', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into movies values(10, 'ìš°ìƒ', 022400, 15, 'ì´ìˆ˜ì§„', 'í•œì„ê·œ', 'ë“œë¼ë§ˆ', 'ì•„ë“¤ì˜ ì‚¬ê³ ë¡œ ì •ì¹˜ ì¸ìƒ ìµœì•…ì˜ ìœ„ê¸°ë¥¼ ë§ê²Œ ëœ ë‚¨ì', str_to_date('2021-11-20', '%Y-%m-%d'));");
+					"insert into movies values(10, '¿ì»ó', 022400, 15, 'ÀÌ¼öÁø', 'ÇÑ¼®±Ô', 'µå¶ó¸¶', '¾ÆµéÀÇ »ç°í·Î Á¤Ä¡ ÀÎ»ı ÃÖ¾ÇÀÇ À§±â¸¦ ¸Â°Ô µÈ ³²ÀÚ', str_to_date('2021-11-20', '%Y-%m-%d'));");
 
 			stmt.execute("insert into halls values(1, 30, false);");
 			stmt.execute("insert into halls values(2, 30, false);");
@@ -1402,59 +1402,59 @@ class Initial extends JFrame implements ActionListener {
 			stmt.execute("insert into halls values(10, 30, true);");
 
 			stmt.execute(
-					"insert into schedules values(1, 1, 1, str_to_date('2021-01-14', '%Y-%m-%d'), 'ëª©', 8, 093000);");
+					"insert into schedules values(1, 1, 1, str_to_date('2021-01-14', '%Y-%m-%d'), '¸ñ', 8, 093000);");
 			stmt.execute(
-					"insert into schedules values(2, 2, 3, str_to_date('2021-03-01','%Y-%m-%d'), 'ì›”', 6, 082000);");
+					"insert into schedules values(2, 2, 3, str_to_date('2021-03-01','%Y-%m-%d'), '¿ù', 6, 082000);");
 			stmt.execute(
-					"insert into schedules values(3, 3, 2, str_to_date('2021-04-01', '%Y-%m-%d'), 'ëª©', 10, 075000);");
+					"insert into schedules values(3, 3, 2, str_to_date('2021-04-01', '%Y-%m-%d'), '¸ñ', 10, 075000);");
 			stmt.execute(
-					"insert into schedules values(4, 3, 3, str_to_date('2021-04-01', '%Y-%m-%d'), 'ëª©', 9, 081000);");
+					"insert into schedules values(4, 3, 3, str_to_date('2021-04-01', '%Y-%m-%d'), '¸ñ', 9, 081000);");
 			stmt.execute(
-					"insert into schedules values(5, 4, 7, str_to_date('2021-04-28', '%Y-%m-%d'), 'ìˆ˜', 7, 100000);");
+					"insert into schedules values(5, 4, 7, str_to_date('2021-04-28', '%Y-%m-%d'), '¼ö', 7, 100000);");
 			stmt.execute(
-					"insert into schedules values(6, 5, 4, str_to_date('2021-06-01', '%Y-%m-%d'), 'í™”', 8, 091000);");
+					"insert into schedules values(6, 5, 4, str_to_date('2021-06-01', '%Y-%m-%d'), 'È­', 8, 091000);");
 			stmt.execute(
-					"insert into schedules values(7, 6, 5, str_to_date('2021-06-01', '%Y-%m-%d'), 'í™”', 7, 085000);");
+					"insert into schedules values(7, 6, 5, str_to_date('2021-06-01', '%Y-%m-%d'), 'È­', 7, 085000);");
 			stmt.execute(
-					"insert into schedules values(8, 7, 6, str_to_date('2021-07-11', '%Y-%m-%d'), 'ì¼', 6, 101000);");
+					"insert into schedules values(8, 7, 6, str_to_date('2021-07-11', '%Y-%m-%d'), 'ÀÏ', 6, 101000);");
 			stmt.execute(
-					"insert into schedules values(9, 8, 8, str_to_date('2021-08-26', '%Y-%m-%d'), 'ëª©', 7, 110000);");
+					"insert into schedules values(9, 8, 8, str_to_date('2021-08-26', '%Y-%m-%d'), '¸ñ', 7, 110000);");
 			stmt.execute(
-					"insert into schedules values(10, 9, 10, str_to_date('2021-09-12', '%Y-%m-%d'), 'ì¼', 8, 091500);");
+					"insert into schedules values(10, 9, 10, str_to_date('2021-09-12', '%Y-%m-%d'), 'ÀÏ', 8, 091500);");
 			stmt.execute(
-					"insert into schedules values(11, 10, 9, str_to_date('2021-11-20', '%Y-%m-%d'), 'í† ', 6, 101000);");
+					"insert into schedules values(11, 10, 9, str_to_date('2021-11-20', '%Y-%m-%d'), 'Åä', 6, 101000);");
 
-			stmt.execute("insert into members values(1, 'ìœ ì¬ì„', '010-1234-5678', 'qwerty@naver.com');");
-			stmt.execute("insert into members values(2, 'ë°•ëª…ìˆ˜', '010-2143-6587', 'asdfgh@daum.net');");
-			stmt.execute("insert into members values(3, 'ì •ì¤€í•˜', '010-9876-5432', 'zxcv@gmail.com');");
-			stmt.execute("insert into members values(4, 'ì •í˜•ëˆ', '010-5678-9000', 'dodo@naver.com');");
-			stmt.execute("insert into members values(5, 'ë…¸í™ì² ', '010-7777-1234', 'hong123@gmail.com');");
-			stmt.execute("insert into members values(6, 'í•˜ë™í›ˆ', '010-4232-5342', 'haha77@naver.com');");
-			stmt.execute("insert into members values(7, 'ê¸¸ì„±ì¤€', '010-2233-4321', 'lee@daum.net');");
-			stmt.execute("insert into members values(8, 'ê¹€íƒœí˜¸', '010-6541-6512', 'teo123@gmail.com');");
-			stmt.execute("insert into members values(9, 'ì œì˜ì¬', '010-4569-4412', 'young33@gmail.com');");
-			stmt.execute("insert into members values(10, 'ì œì„ìŠ¤', '010-9123-4012', 'james00@gmail.com');");
+			stmt.execute("insert into members values(1, 'À¯Àç¼®', '010-1234-5678', 'qwerty@naver.com');");
+			stmt.execute("insert into members values(2, '¹Ú¸í¼ö', '010-2143-6587', 'asdfgh@daum.net');");
+			stmt.execute("insert into members values(3, 'Á¤ÁØÇÏ', '010-9876-5432', 'zxcv@gmail.com');");
+			stmt.execute("insert into members values(4, 'Á¤Çüµ·', '010-5678-9000', 'dodo@naver.com');");
+			stmt.execute("insert into members values(5, '³ëÈ«Ã¶', '010-7777-1234', 'hong123@gmail.com');");
+			stmt.execute("insert into members values(6, 'ÇÏµ¿ÈÆ', '010-4232-5342', 'haha77@naver.com');");
+			stmt.execute("insert into members values(7, '±æ¼ºÁØ', '010-2233-4321', 'lee@daum.net');");
+			stmt.execute("insert into members values(8, '±èÅÂÈ£', '010-6541-6512', 'teo123@gmail.com');");
+			stmt.execute("insert into members values(9, 'Á¦¿µÀç', '010-4569-4412', 'young33@gmail.com');");
+			stmt.execute("insert into members values(10, 'Á¦ÀÓ½º', '010-9123-4012', 'james00@gmail.com');");
 
 			stmt.execute(
-					"insert into reservations values(1, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 9000, 3, str_to_date('2021-01-14', '%Y-%m-%d'));");
+					"insert into reservations values(1, 'Ä«µå', '°áÁ¦¿Ï·á', 9000, 3, str_to_date('2021-01-14', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(2, 'í˜„ê¸ˆ', 'ê²°ì œì™„ë£Œ', 12000, 6, str_to_date('2021-01-15', '%Y-%m-%d'));");
+					"insert into reservations values(2, 'Çö±İ', '°áÁ¦¿Ï·á', 12000, 6, str_to_date('2021-01-15', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(3, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 12000, 5, str_to_date('2021-03-02', '%Y-%m-%d'));");
+					"insert into reservations values(3, 'Ä«µå', '°áÁ¦¿Ï·á', 12000, 5, str_to_date('2021-03-02', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(4, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 9000, 1, str_to_date('2021-04-09', '%Y-%m-%d'));");
+					"insert into reservations values(4, 'Ä«µå', '°áÁ¦¿Ï·á', 9000, 1, str_to_date('2021-04-09', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(5, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 9000, 1, str_to_date('2021-06-03', '%Y-%m-%d'));");
+					"insert into reservations values(5, 'Ä«µå', '°áÁ¦¿Ï·á', 9000, 1, str_to_date('2021-06-03', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(6, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 12000, 1, str_to_date('2021-06-15', '%Y-%m-%d'));");
+					"insert into reservations values(6, 'Ä«µå', '°áÁ¦¿Ï·á', 12000, 1, str_to_date('2021-06-15', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(7, 'í˜„ê¸ˆ', 'ê²°ì œì™„ë£Œ', 8000, 4, str_to_date('2021-07-20', '%Y-%m-%d'));");
+					"insert into reservations values(7, 'Çö±İ', '°áÁ¦¿Ï·á', 8000, 4, str_to_date('2021-07-20', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(8, 'ì¹´ë“œ', 'ê²°ì œì™„ë£Œ', 12000, 2, str_to_date('2021-08-27', '%Y-%m-%d'));");
+					"insert into reservations values(8, 'Ä«µå', '°áÁ¦¿Ï·á', 12000, 2, str_to_date('2021-08-27', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(9, 'ì¹´ë“œ', 'ê²°ì œëŒ€ê¸°', 9000, 1, str_to_date('2021-09-08', '%Y-%m-%d'));");
+					"insert into reservations values(9, 'Ä«µå', '°áÁ¦´ë±â', 9000, 1, str_to_date('2021-09-08', '%Y-%m-%d'));");
 			stmt.execute(
-					"insert into reservations values(10, 'í˜„ê¸ˆ', 'ê²°ì œëŒ€ê¸°', 12000, 9, str_to_date('2021-09-10', '%Y-%m-%d'));");
+					"insert into reservations values(10, 'Çö±İ', '°áÁ¦´ë±â', 12000, 9, str_to_date('2021-09-10', '%Y-%m-%d'));");
 						
 			stmt.execute("insert into seats values(1, 1, false);");
 			stmt.execute("insert into seats values(2, 1, false);");
@@ -1479,9 +1479,9 @@ class Initial extends JFrame implements ActionListener {
 			stmt.execute("insert into tickets values(9, 10, 10, 9, 9, false, 12000, 9000);");
 			stmt.execute("insert into tickets values(10, 11, 9, 10, 10, false, 12000, 12000);");
 
-			msg.showMessageDialog(null, "ì´ˆê¸°í™” ì™„ë£Œ");
+			msg.showMessageDialog(null, "ÃÊ±âÈ­ ¿Ï·á");
 		} catch (SQLException exception) {
-			msg.showMessageDialog(null, "ì¿¼ë¦¬ ì—°ê²° ì˜¤ë¥˜");
+			msg.showMessageDialog(null, "Äõ¸® ¿¬°á ¿À·ù");
 		}
 
 	}
@@ -1490,18 +1490,18 @@ class Initial extends JFrame implements ActionListener {
 
 class Insert extends JFrame implements ActionListener {
 
-	String table_name[] = { "ì˜í™”", "ìƒì˜ì¼ì •", "ìƒì˜ê´€", "í‹°ì¼“", "ì¢Œì„", "íšŒì›ê³ ê°", "ì˜ˆë§¤ì •ë³´" };
+	String table_name[] = { "¿µÈ­", "»ó¿µÀÏÁ¤", "»ó¿µ°ü", "Æ¼ÄÏ", "ÁÂ¼®", "È¸¿ø°í°´", "¿¹¸ÅÁ¤º¸" };
 
 	Connection con;
 	JTextField writeArea = new JTextField(65);
 	JComboBox<String> combo = new JComboBox<String>(table_name);
 	JTextArea printArea = new JTextArea(15, 78);
-	JButton btn1 = new JButton("ì €ì¥");
-	JButton btn2 = new JButton("ì·¨ì†Œ");
+	JButton btn1 = new JButton("ÀúÀå");
+	JButton btn2 = new JButton("Ãë¼Ò");
 
 	public Insert(Connection con) {
 
-		setTitle("ì…ë ¥");
+		setTitle("ÀÔ·Â");
 
 		this.con = con;
 		printArea.setEditable(false);
@@ -1524,17 +1524,17 @@ class Insert extends JFrame implements ActionListener {
 		c.add(printArea);
 		c.add(new JScrollPane(printArea));
 
-		printArea.setText(" ìƒˆë¡œìš´ ë°ì´í„°ë¥¼ ì…ë ¥í•˜ì‹œë ¤ë©´ í•­ëª©ì„ ì„ íƒí•˜ì‹œê³  ìœ„ì˜ ì…ë ¥ì°½ì— ë°ì´í„°ë¥¼ ì…ë ¥í•œ ë’¤ ì €ì¥ ë²„íŠ¼ì„ ëˆŒëŸ¬ì£¼ì„¸ìš”.\n");
-		printArea.append(" ê° ì†ì„±ì€ /ë¡œ êµ¬ë¶„í•´ì£¼ì‹œê³  ë‚ ì§œëŠ” yyyy-mm-dd í˜•ì‹ìœ¼ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”. ìƒì˜ë“±ê¸‰ì€ ì •ìˆ˜ë¡œ ì…ë ¥í•´ì£¼ì‹œê³  ì „ì²´ì´ìš©ê°€ëŠ” 0ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.\n");
-		printArea.append(" ì‚¬ìš©ìœ ë¬´, ë°œê¶Œì—¬ë¶€ì˜ ê²½ìš° true ë˜ëŠ” falseë¡œ ì…ë ¥í•´ì£¼ì‹œê³  ì‹œê°„ì€ hhmmss í˜•ì‹ìœ¼ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”.\n\n");
-		printArea.append(" ì˜í™” ì…ë ¥ ì˜ˆì‹œ : 1/ë²”ì£„ë„ì‹œ2/020000/15/ì´ìƒìš©/ë§ˆë™ì„/ë²”ì£„, ì•¡ì…˜/ì˜í™” ì†Œê°œ ì…ë ¥/2021-01-14\n\n");
-		printArea.append(" ì˜í™” ì…ë ¥ ì‹œ : ì˜í™”ë²ˆí˜¸/ì˜í™”ëª…/ìƒì˜ì‹œê°„/ìƒì˜ë“±ê¸‰/ê°ë…/ë°°ìš°/ì¥ë¥´/ì˜í™”ì†Œê°œ/ê°œë´‰ì¼\n");
-		printArea.append(" ìƒì˜ì¼ì • ì…ë ¥ ì‹œ : ìƒì˜ì¼ì •ë²ˆí˜¸/ì˜í™”ë²ˆí˜¸/ìƒì˜ê´€ë²ˆí˜¸/ìƒì˜ì‹œì‘ìµ/ìƒì˜ìš”ì¼/ìƒì˜íšŒì°¨/ìƒì˜ì‹œì‘ì‹œê°„\n");
-		printArea.append(" ìƒì˜ê´€ ì…ë ¥ ì‹œ : ìƒì˜ê´€ë²ˆí˜¸/ì¢Œì„ìˆ˜/ìƒì˜ê´€ì‚¬ìš©ì—¬ë¶€\n");
-		printArea.append(" í‹°ì¼“ ì…ë ¥ ì‹œ : í‹°ì¼“ë²ˆí˜¸/ìƒì˜ì¼ì •ë²ˆí˜¸/ìƒì˜ê´€ë²ˆí˜¸/ì¢Œì„ë²ˆí˜¸/ì˜ˆë§¤ë²ˆí˜¸/ë°œê¶Œì—¬ë¶€/í‘œì¤€ê°€ê²©/íŒë§¤ê°€ê²©\n");
-		printArea.append(" ì¢Œì„ ì…ë ¥ ì‹œ : ì¢Œì„ë²ˆí˜¸/ìƒì˜ê´€ë²ˆí˜¸/ì¢Œì„ì‚¬ìš©ì—¬ë¶€\n");
-		printArea.append(" íšŒì›ê³ ê° ì…ë ¥ ì‹œ : íšŒì›ì•„ì´ë””/ê³ ê°ëª…/íœ´ëŒ€í°ë²ˆí˜¸/ì „ìë©”ì¼ì£¼ì†Œ\n");
-		printArea.append(" ì˜ˆë§¤ì •ë³´ ì…ë ¥ ì‹œ : ì˜ˆë§¤ë²ˆí˜¸/ê²°ì œë°©ë²•/ê²°ì œìƒíƒœ/ê²°ì œê¸ˆì•¡/íšŒì›ì•„ì´ë””/ê²°ì œì¼ì\n");
+		printArea.setText(" »õ·Î¿î µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÏ½Ã·Á¸é Ç×¸ñÀ» ¼±ÅÃÇÏ½Ã°í À§ÀÇ ÀÔ·ÂÃ¢¿¡ µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÑ µÚ ÀúÀå ¹öÆ°À» ´­·¯ÁÖ¼¼¿ä.\n");
+		printArea.append(" °¢ ¼Ó¼ºÀº /·Î ±¸ºĞÇØÁÖ½Ã°í ³¯Â¥´Â yyyy-mm-dd Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ¼¼¿ä. »ó¿µµî±ŞÀº Á¤¼ö·Î ÀÔ·ÂÇØÁÖ½Ã°í ÀüÃ¼ÀÌ¿ë°¡´Â 0À» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
+		printArea.append(" »ç¿ëÀ¯¹«, ¹ß±Ç¿©ºÎÀÇ °æ¿ì true ¶Ç´Â false·Î ÀÔ·ÂÇØÁÖ½Ã°í ½Ã°£Àº hhmmss Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.\n\n");
+		printArea.append(" ¿µÈ­ ÀÔ·Â ¿¹½Ã : 1/¹üÁËµµ½Ã2/020000/15/ÀÌ»ó¿ë/¸¶µ¿¼®/¹üÁË, ¾×¼Ç/¿µÈ­ ¼Ò°³ ÀÔ·Â/2021-01-14\n\n");
+		printArea.append(" ¿µÈ­ ÀÔ·Â ½Ã : ¿µÈ­¹øÈ£/¿µÈ­¸í/»ó¿µ½Ã°£/»ó¿µµî±Ş/°¨µ¶/¹è¿ì/Àå¸£/¿µÈ­¼Ò°³/°³ºÀÀÏ\n");
+		printArea.append(" »ó¿µÀÏÁ¤ ÀÔ·Â ½Ã : »ó¿µÀÏÁ¤¹øÈ£/¿µÈ­¹øÈ£/»ó¿µ°ü¹øÈ£/»ó¿µ½ÃÀÛÀÍ/»ó¿µ¿äÀÏ/»ó¿µÈ¸Â÷/»ó¿µ½ÃÀÛ½Ã°£\n");
+		printArea.append(" »ó¿µ°ü ÀÔ·Â ½Ã : »ó¿µ°ü¹øÈ£/ÁÂ¼®¼ö/»ó¿µ°ü»ç¿ë¿©ºÎ\n");
+		printArea.append(" Æ¼ÄÏ ÀÔ·Â ½Ã : Æ¼ÄÏ¹øÈ£/»ó¿µÀÏÁ¤¹øÈ£/»ó¿µ°ü¹øÈ£/ÁÂ¼®¹øÈ£/¿¹¸Å¹øÈ£/¹ß±Ç¿©ºÎ/Ç¥ÁØ°¡°İ/ÆÇ¸Å°¡°İ\n");
+		printArea.append(" ÁÂ¼® ÀÔ·Â ½Ã : ÁÂ¼®¹øÈ£/»ó¿µ°ü¹øÈ£/ÁÂ¼®»ç¿ë¿©ºÎ\n");
+		printArea.append(" È¸¿ø°í°´ ÀÔ·Â ½Ã : È¸¿ø¾ÆÀÌµğ/°í°´¸í/ÈŞ´ëÆù¹øÈ£/ÀüÀÚ¸ŞÀÏÁÖ¼Ò\n");
+		printArea.append(" ¿¹¸ÅÁ¤º¸ ÀÔ·Â ½Ã : ¿¹¸Å¹øÈ£/°áÁ¦¹æ¹ı/°áÁ¦»óÅÂ/°áÁ¦±İ¾×/È¸¿ø¾ÆÀÌµğ/°áÁ¦ÀÏÀÚ\n");
 		
 		setSize(900, 450);
 		setVisible(true);
@@ -1558,19 +1558,19 @@ class Insert extends JFrame implements ActionListener {
 		
 		String query = "";
 
-		if (combo.getSelectedItem().toString().equals("ì˜í™”")) {
+		if (combo.getSelectedItem().toString().equals("¿µÈ­")) {
 			query = "insert into movies values(*, '*', *, *, '*', '*', '*', '*', str_to_date('*', '%Y-%m-%d'));";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ì¼ì •")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µÀÏÁ¤")) {
 			query = "insert into schedules values(*, *, *, str_to_date('*', '%Y-%m-%d'), '*', *, *);";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ê´€")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µ°ü")) {
 			query = "insert into halls values(*, *, *);";
-		} else if (combo.getSelectedItem().toString().equals("í‹°ì¼“")) {
+		} else if (combo.getSelectedItem().toString().equals("Æ¼ÄÏ")) {
 			query = "insert into tickets values(*, *, *, *, *, *, *, *);";
-		} else if (combo.getSelectedItem().toString().equals("ì¢Œì„")) {
+		} else if (combo.getSelectedItem().toString().equals("ÁÂ¼®")) {
 			query = "insert into seats values(*, *, *);";
-		} else if (combo.getSelectedItem().toString().equals("íšŒì›ê³ ê°")) {
+		} else if (combo.getSelectedItem().toString().equals("È¸¿ø°í°´")) {
 			query = "insert into members values(*, '*', '*', '*');";
-		} else if (combo.getSelectedItem().toString().equals("ì˜ˆë§¤ì •ë³´")) {
+		} else if (combo.getSelectedItem().toString().equals("¿¹¸ÅÁ¤º¸")) {
 			query = "insert into reservations values(*, '*', '*', *, *, str_to_date('*', '%Y-%m-%d'));";
 		}
 
@@ -1586,14 +1586,14 @@ class Insert extends JFrame implements ActionListener {
 
 			stmt.execute(query);
 
-			printArea.setText("ì…ë ¥ ì„±ê³µ");
+			printArea.setText("ÀÔ·Â ¼º°ø");
 		} catch (SQLException e) {
-			printArea.setText("ì…ë ¥ ì‹¤íŒ¨, ì¤‘ë³µëœ í‚¤ ê°’ì´ í¬í•¨ë˜ì–´ ìˆê±°ë‚˜ ì–‘ì‹ì— ë§ëŠ” ê°’ì„ ì…ë ¥í•˜ì˜€ëŠ”ì§€ í™•ì¸í•´ì£¼ì‹­ì‹œì˜¤.");
+			printArea.setText("ÀÔ·Â ½ÇÆĞ, Áßº¹µÈ Å° °ªÀÌ Æ÷ÇÔµÇ¾î ÀÖ°Å³ª ¾ç½Ä¿¡ ¸Â´Â °ªÀ» ÀÔ·ÂÇÏ¿´´ÂÁö È®ÀÎÇØÁÖ½Ê½Ã¿À.\nÁ¸ÀçÇÏÁö ¾Ê´Â ¿Ü·¡Å°ÀÇ ÂüÁ¶´Â ºÒ°¡´ÉÇÕ´Ï´Ù.");
 		} catch (NumberFormatException e) {
-			printArea.setText("ì…ë ¥ ì‹¤íŒ¨, ì…ë ¥ê°’ì€ /ë¡œ êµ¬ë¶„í•´ ì…ë ¥í•´ì£¼ì‹­ì‹œì˜¤.\n");
-			printArea.append("ë‚ ì§œëŠ” yyyy-mm-dd í˜•ì‹ìœ¼ë¡œ ì…ë ¥í•´ì£¼ì‹­ì‹œì˜¤.");
+			printArea.setText("ÀÔ·Â ½ÇÆĞ, ÀÔ·Â°ªÀº /·Î ±¸ºĞÇØ ÀÔ·ÂÇØÁÖ½Ê½Ã¿À.\n");
+			printArea.append("³¯Â¥´Â yyyy-mm-dd Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ½Ê½Ã¿À.");
 		} catch (IndexOutOfBoundsException e) {
-			printArea.setText("ì…ë ¥ ì‹¤íŒ¨, ì…ë ¥ê°’ì€ /ë¡œ êµ¬ë¶„í•´ ì…ë ¥í•´ì£¼ì‹­ì‹œì˜¤.\n");
+			printArea.setText("ÀÔ·Â ½ÇÆĞ, ÀÔ·Â°ªÀº /·Î ±¸ºĞÇØ ÀÔ·ÂÇØÁÖ½Ê½Ã¿À.\n");
 		}
 
 	}
@@ -1602,21 +1602,21 @@ class Insert extends JFrame implements ActionListener {
 
 class Delete extends JFrame implements ActionListener {
 
-	String table_name[] = { "ì˜í™”", "ìƒì˜ì¼ì •", "ìƒì˜ê´€", "í‹°ì¼“", "ì¢Œì„", "íšŒì›ê³ ê°", "ì˜ˆë§¤ì •ë³´" };
+	String table_name[] = { "¿µÈ­", "»ó¿µÀÏÁ¤", "»ó¿µ°ü", "Æ¼ÄÏ", "ÁÂ¼®", "È¸¿ø°í°´", "¿¹¸ÅÁ¤º¸" };
 
 	Connection con;
 
 	JComboBox<String> combo = new JComboBox<String>(table_name);
 	JTextField where = new JTextField(65);
 	JTextArea printArea = new JTextArea(15, 78);
-	JButton btn_delete = new JButton("ì‚­ì œ");
-	JButton btn_cancel = new JButton("ì·¨ì†Œ");
+	JButton btn_delete = new JButton("»èÁ¦");
+	JButton btn_cancel = new JButton("Ãë¼Ò");
 
 	public Delete(Connection con) {
 
 		this.con = con;
 
-		setTitle("ì‚­ì œ");
+		setTitle("»èÁ¦");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
@@ -1624,7 +1624,7 @@ class Delete extends JFrame implements ActionListener {
 
 		JPanel inPanel = new JPanel();
 
-		inPanel.add(new JLabel("Where ì¡°ê±´"));
+		inPanel.add(new JLabel("Where Á¶°Ç"));
 		inPanel.add(where);
 
 		c.add(combo);
@@ -1634,7 +1634,9 @@ class Delete extends JFrame implements ActionListener {
 		c.add(printArea);
 		c.add(new JScrollPane(printArea));
 
-		printArea.setText("í…Œì´ë¸”ì„ ì„ íƒí•˜ì‹œê³  ì…ë ¥ ì°½ì— ì¡°ê±´ì‹ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+		printArea.setText("Å×ÀÌºíÀ» ¼±ÅÃÇÏ½Ã°í ÀÔ·Â Ã¢¿¡ Á¶°Ç½ÄÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n\n");
+		printArea.append("where Á¶°Ç¹®Àº Æ¼ÄÏÀ» »èÁ¦ÇÒ °æ¿ì¸¦ ¿¹¸¦ µé¸é ticketId = 1ÀÇ Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
+		printArea.append("ÀÌ¿Ü¿¡µµ delete from (table) where *ÀÇ Äõ¸®¹®¿¡¼­ * À§Ä¡¿¡ ³ÖÀ» ¼ö ÀÖ´Â Á¶°Ç½ÄÀº »ç¿ë °¡´ÉÇÕ´Ï´Ù.");
 
 		btn_delete.addActionListener(this);
 		btn_cancel.addActionListener(this);
@@ -1659,19 +1661,19 @@ class Delete extends JFrame implements ActionListener {
 
 		String query = "";
 
-		if (combo.getSelectedItem().toString().equals("ì˜í™”")) {
+		if (combo.getSelectedItem().toString().equals("¿µÈ­")) {
 			query = "delete from movies where *;";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ì¼ì •")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µÀÏÁ¤")) {
 			query = "delete from schedules where *;";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ê´€")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µ°ü")) {
 			query = "delete from halls where *;";
-		} else if (combo.getSelectedItem().toString().equals("í‹°ì¼“")) {
+		} else if (combo.getSelectedItem().toString().equals("Æ¼ÄÏ")) {
 			query = "delete from tickets where *;";
-		} else if (combo.getSelectedItem().toString().equals("ì¢Œì„")) {
+		} else if (combo.getSelectedItem().toString().equals("ÁÂ¼®")) {
 			query = "delete from seats where *;";
-		} else if (combo.getSelectedItem().toString().equals("íšŒì›ê³ ê°")) {
+		} else if (combo.getSelectedItem().toString().equals("È¸¿ø°í°´")) {
 			query = "delete from members where *;";
-		} else if (combo.getSelectedItem().toString().equals("ì˜ˆë§¤ì •ë³´")) {
+		} else if (combo.getSelectedItem().toString().equals("¿¹¸ÅÁ¤º¸")) {
 			query = "delete from reservations where *;";
 		}
 
@@ -1680,11 +1682,11 @@ class Delete extends JFrame implements ActionListener {
 			Statement stmt = con.createStatement();
 			query = query.replaceFirst("\\*", where.getText());
 			stmt.execute(query);
-			printArea.setText("ì‚­ì œ ì„±ê³µ");
+			printArea.setText("»èÁ¦ ¼º°ø");
 
 		} catch (SQLException exception) {
-			printArea.setText(" ì¡°ê±´ì‹ì„ ë‹¤ì‹œ í™•ì¸í•´ì£¼ì‹œê¸° ë°”ëë‹ˆë‹¤.\n");
-			printArea.append(" ì™¸ë˜í‚¤ë¡œ ì‚¬ìš©ì¤‘ì¸ íŠœí”Œì€ ì‚­ì œê°€ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.");
+			printArea.setText(" Á¶°Ç½ÄÀ» ´Ù½Ã È®ÀÎÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.\n");
+			printArea.append(" ¿Ü·¡Å°·Î »ç¿ëÁßÀÎ Æ©ÇÃÀº »èÁ¦°¡ ºÒ°¡´ÉÇÕ´Ï´Ù.");
 		}
 
 	}
@@ -1693,7 +1695,7 @@ class Delete extends JFrame implements ActionListener {
 
 class Update extends JFrame implements ActionListener {
 
-	String table_name[] = { "ì˜í™”", "ìƒì˜ì¼ì •", "ìƒì˜ê´€", "í‹°ì¼“", "ì¢Œì„", "íšŒì›ê³ ê°", "ì˜ˆë§¤ì •ë³´" };
+	String table_name[] = { "¿µÈ­", "»ó¿µÀÏÁ¤", "»ó¿µ°ü", "Æ¼ÄÏ", "ÁÂ¼®", "È¸¿ø°í°´", "¿¹¸ÅÁ¤º¸" };
 
 	Connection con;
 
@@ -1701,14 +1703,14 @@ class Update extends JFrame implements ActionListener {
 	JTextField set = new JTextField(65);
 	JTextField where = new JTextField(65);
 	JTextArea printArea = new JTextArea(15, 78);
-	JButton btn_update = new JButton("ë³€ê²½");
-	JButton btn_cancel = new JButton("ì·¨ì†Œ");
+	JButton btn_update = new JButton("º¯°æ");
+	JButton btn_cancel = new JButton("Ãë¼Ò");
 
 	public Update(Connection con) {
 
 		this.con = con;
 
-		setTitle("ë³€ê²½");
+		setTitle("º¯°æ");
 		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
@@ -1717,9 +1719,9 @@ class Update extends JFrame implements ActionListener {
 		JPanel inPanel1 = new JPanel();
 		JPanel inPanel2 = new JPanel();
 
-		inPanel1.add(new JLabel("Set ì¡°ê±´"));
+		inPanel1.add(new JLabel("Set Á¶°Ç"));
 		inPanel1.add(set);
-		inPanel2.add(new JLabel("Where ì¡°ê±´"));
+		inPanel2.add(new JLabel("Where Á¶°Ç"));
 		inPanel2.add(where);
 
 		c.add(combo);
@@ -1730,7 +1732,12 @@ class Update extends JFrame implements ActionListener {
 		c.add(printArea);
 		c.add(new JScrollPane(printArea));
 
-		printArea.setText("í…Œì´ë¸”ì„ ì„ íƒí•˜ì‹œê³  ê° ì…ë ¥ ì°½ì— ì¡°ê±´ì‹ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+		printArea.setText("Å×ÀÌºíÀ» ¼±ÅÃÇÏ½Ã°í °¢ ÀÔ·Â Ã¢¿¡ Á¶°Ç½ÄÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n\n");
+		printArea.append("Where Á¶°Ç¹®Àº ¿¹¸¦ µé¾î ÁÂ¼®À» º¯°æÇÒ °æ¿ì¸¦ ¿¹¸¦ µé¸é seatId = 1ÀÇ Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
+		printArea.append("ÀÌ¿Ü¿¡µµ UPDATE SET ? WHERE *;ÀÇ Äõ¸®¹®¿¡¼­ * À§Ä¡¿¡ ³ÖÀ» ¼ö ÀÖ´Â Á¶°Ç½ÄÀº »ç¿ë °¡´ÉÇÕ´Ï´Ù.\n\n");
+		printArea.append("Set Á¶°Ç¹®Àº ¿¹¸¦ µé¾î ÁÂ¼®ÀÇ »ç¿ë¿©ºÎ¸¦ º¯°æÇÒ °æ¿ì SeatStatus = falseÀÇ Çü½ÄÀ¸·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
+		printArea.append("ÀÌ¿Ü¿¡µµ UPDATE SET ? WHERE *;ÀÇ Äõ¸®¹®¿¡¼­ ? À§Ä¡¿¡ ³ÖÀ» ¼ö ÀÖ´Â Á¶°Ç½ÄÀº »ç¿ë °¡´ÉÇÕ´Ï´Ù.");
+		
 
 		btn_update.addActionListener(this);
 		btn_cancel.addActionListener(this);
@@ -1757,19 +1764,19 @@ class Update extends JFrame implements ActionListener {
 
 		String query = "";
 
-		if (combo.getSelectedItem().toString().equals("ì˜í™”")) {
+		if (combo.getSelectedItem().toString().equals("¿µÈ­")) {
 			query = "UPDATE movies SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ì¼ì •")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µÀÏÁ¤")) {
 			query = "UPDATE schedules SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("ìƒì˜ê´€")) {
+		} else if (combo.getSelectedItem().toString().equals("»ó¿µ°ü")) {
 			query = "UPDATE halls SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("í‹°ì¼“")) {
+		} else if (combo.getSelectedItem().toString().equals("Æ¼ÄÏ")) {
 			query = "UPDATE tickets SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("ì¢Œì„")) {
+		} else if (combo.getSelectedItem().toString().equals("ÁÂ¼®")) {
 			query = "UPDATE seats SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("íšŒì›ê³ ê°")) {
+		} else if (combo.getSelectedItem().toString().equals("È¸¿ø°í°´")) {
 			query = "UPDATE members SET * WHERE *;";
-		} else if (combo.getSelectedItem().toString().equals("ì˜ˆë§¤ì •ë³´")) {
+		} else if (combo.getSelectedItem().toString().equals("¿¹¸ÅÁ¤º¸")) {
 			query = "UPDATE reservations SET * WHERE *;";
 		}
 
@@ -1782,11 +1789,11 @@ class Update extends JFrame implements ActionListener {
 
 			stmt.execute(query);
 
-			printArea.setText(" ë³€ê²½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			printArea.setText(" º¯°æÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 
 		} catch (SQLException exception) {
-			printArea.setText(" ì¡°ê±´ì‹ì„ ë‹¤ì‹œ í™•ì¸í•´ì£¼ì‹œê¸° ë°”ëë‹ˆë‹¤.\n");
-			printArea.append(" ì™¸ë˜í‚¤ë¡œ ì‚¬ìš©ì¤‘ì´ê±°ë‚˜ ì¤‘ë³µëœ í‚¤ ê°’ì´ ì—†ë„ë¡ ë³€ê²½í•´ì£¼ì‹­ì‹œì˜¤.");
+			printArea.setText(" Á¶°Ç½ÄÀÌ ÇØ´ç Å×ÀÌºí¿¡ Àû¿ëµÇ´ÂÁö ´Ù½Ã È®ÀÎÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.\n");
+			printArea.append(" ¿Ü·¡Å°·Î »ç¿ëÁßÀÌ°Å³ª Áßº¹µÈ Å° °ªÀÌ ¾øµµ·Ï º¯°æÇØÁÖ½Ê½Ã¿À.");
 		}
 
 	}	
@@ -1809,15 +1816,15 @@ public class TheaterDB extends JFrame implements ActionListener {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			System.out.println("ë“œë¼ì´ë²„ ë¡œë“œ ì„±ê³µ");
+			System.out.println("µå¶óÀÌ¹ö ·Îµå ¼º°ø");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		try {
-			System.out.println("ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ì¤€ë¹„...");
+			System.out.println("µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ÁØºñ...");
 			con = DriverManager.getConnection(url, userid, pwd);
-			System.out.println("ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ì„±ê³µ");			
+			System.out.println("µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ¼º°ø");			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1829,8 +1836,8 @@ public class TheaterDB extends JFrame implements ActionListener {
 
 		JPanel btn = new JPanel();
 
-		btn1.setText("ê´€ë¦¬ì");
-		btn2.setText("íšŒì›");
+		btn1.setText("°ü¸®ÀÚ");
+		btn2.setText("È¸¿ø");
 
 		btn1.setSize(50, 50);
 		btn2.setSize(50, 50);
@@ -1853,16 +1860,16 @@ public class TheaterDB extends JFrame implements ActionListener {
 
 		try {
 
-			if (e.getSource() == btn1) { // ê´€ë¦¬ì ê¸°ëŠ¥ í¼ í˜¸ì¶œ
+			if (e.getSource() == btn1) { // °ü¸®ÀÚ ±â´É Æû È£Ãâ
 				adminF admin = new adminF(con);
 			}
 
-			else if (e.getSource() == btn2) { // íšŒì› ê¸°ëŠ¥ í¼ í˜¸ì¶œ, íšŒì›ID 1ë¡œ ì„¤ì •í•˜ì—¬ í˜¸ì¶œ
+			else if (e.getSource() == btn2) { // È¸¿ø ±â´É Æû È£Ãâ, È¸¿øID 1·Î ¼³Á¤ÇÏ¿© È£Ãâ
 				memberF member = new memberF(con, 1);
 			}
 
 		} catch (Exception exception) {
-			msg.showMessageDialog(null, "í€´ë¦¬ ì—°ê²° ì˜¤ë¥˜ " + exception);
+			msg.showMessageDialog(null, "Äû¸® ¿¬°á ¿À·ù " + exception);
 		}
 
 	}
@@ -1875,7 +1882,7 @@ public class TheaterDB extends JFrame implements ActionListener {
 				try {
 					run.con.close();
 				} catch (Exception e4) { 	}
-				System.out.println("ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ì¢…ë£Œ");
+				System.out.println("µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á Á¾·á");
 				System.exit(0);
 			}
 		});
